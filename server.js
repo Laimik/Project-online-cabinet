@@ -1,9 +1,14 @@
-const express = require('express');
-const MongoClient = require('mongodb').MongoClient;
-const bodyParser = require('body-parser');
-const app  = express();
+let express = require('express');
+let server  = express();
+let db = require('mongoose');
 
 const port = 8000;
-app.listen(port, () => {
-    console.log('I am server on port:' + port);
+
+db.connect('mongodb://localhost/POC', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
+
+server.listen(port, () => {
+    console.log('Server is running at port ' + port);
 });
