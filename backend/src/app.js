@@ -10,7 +10,10 @@ const counterRouter = require('./routes/counters');
 const counterValuesRouter = require('./routes/counter_values');
 
 const swaggerUi = require('swagger-ui-express');
+
 const swaggerDocument = require('../swagger.json');
+swaggerDocument.host=""
+swaggerDocument.port=process.env.HTTP_PORT || '3000'
 
 const app = express();
 
@@ -19,7 +22,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use('/auth', authRouter);
 app.use('/api/v1/counter_types', counterTypeRouter);
