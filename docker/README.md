@@ -27,3 +27,6 @@ JWT_SECRET=mysupersecurestring
 - docker-compose start (запустить контейнеры)
 - docker-compose down (удалить контейнеры)
 
+Чтобы перейти на документацию swagger, необходимо добавить в адресу api-docs
+Например: http://localhost:3000/api-docs
+

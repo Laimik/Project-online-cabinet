@@ -10,7 +10,10 @@ const counterRouter = require('./routes/counters');
 const counterValuesRouter = require('./routes/counter_values');
 
 const swaggerUi = require('swagger-ui-express');
+
 const swaggerDocument = require('../swagger.json');
+swaggerDocument.host=""
+swaggerDocument.port=process.env.HTTP_PORT || '3000'
 
 const app = express();
 

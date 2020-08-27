@@ -9,6 +9,7 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 COPY package*.json ./
+COPY swagger*.json ./
 COPY ./bin ./bin
 COPY ./src ./src
 COPY ecosystem.config.yml ./
