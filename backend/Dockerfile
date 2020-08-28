@@ -17,7 +17,7 @@ COPY entrypoint.sh ./
 RUN npm ci --quiet --only=production
 RUN npm install pm2 -g --quiet
 
-ENTRYPOINT ["sh", "./entrypoint.sh"]
+CMD [ "pm2-runtime", "start", "ecosystem.config.yml" ]
 
 EXPOSE 3000
 
