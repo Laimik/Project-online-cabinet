@@ -32,7 +32,7 @@ router.post("/sign_up", [urlencodedParser, signUpValidation], async function (re
   }
 });
 
-router.post("/sign_in", [ urlencodedParser, signInValidation,signInValidation ], async function (req, res) {
+router.post("/sign_in", [ urlencodedParser, signInValidation ], async function (req, res) {
   if(!req.body) return res.sendStatus(400);
   const email = req.body.email;
   const password = req.body.password;

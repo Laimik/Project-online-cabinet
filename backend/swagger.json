@@ -783,6 +783,51 @@
           }
         }
       }
+    },
+    "/api/v1/profile/change_password": {
+      "put": {
+        "tags": ["Profile"],
+        "summary": "Change password",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "example": "somepassword"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "All ok, counter changed",
+            "content":{
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Address not found"
+          },
+          "500": {
+            "description": "Something went wrong"
+          }
+        }
+      }
     }
   },
 
@@ -801,6 +846,13 @@
             "type": "string"
           },
           "phone_number": {
+            "type": "string"
+          }
+        }
+      },
+      "NewPassword": {
+        "properties": {
+          "password": {
             "type": "string"
           }
         }

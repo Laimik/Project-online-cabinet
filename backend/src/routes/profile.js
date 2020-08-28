@@ -1,7 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const authenticateJWT = require("../middlewares/authenticateJWT");
-const {getUserById} = require("../services/userService");
+const bcrypt = require("bcrypt");
+const bodyParser = require("body-parser");
+const urlencodedParser = bodyParser.urlencoded({extended: false});
+const {profileValidation, passwordChangeValidation} = require("../middlewares/profile_validation");
+const {getUserById, updateUser} = require("../services/userService");
 require('dotenv').config();
 
 router.get('/', authenticateJWT, async (req, res) => {
@@ -20,18 +24,35 @@ router.get('/', authenticateJWT, async (req, res) => {
         }
     },
 
-    router.put('/:id', [authenticateJWT, urlencodedParser, addressValidation], async (req, res) => {
+    router.put('/', [authenticateJWT, urlencodedParser, profileValidation], async (req, res) => {
         const user = req.user;
         try {
-            const address = await updateAddress({
-                id: req.params.id,
-                userId: user.id,
-                address: req.body.address,
-                apartments: req.body.apartments,
-                fias: req.body.fias_code
-            });
+            const existingUser = await getUserById(user.id);
+            existingUser.name = req.body.name;
+            existingUser.email = req.body.email;
+            existingUser.phoneNumber = req.body.phone_number;
 
-            res.status(200).json(address);
+            const profile = await updateUser(existingUser);
+            delete profile.password;
+
+            res.status(200).json(profile);
+        } catch (e) {
+            console.error(e);
+            res.sendStatus(500);
+        }
+    }),
+
+    router.put('/change_password', [authenticateJWT, urlencodedParser, passwordChangeValidation], async (req, res) => {
+        const user = req.user;
+        const password = req.body.password;
+        try {
+            const passwordHash = await bcrypt.hash(password, Number(process.env.SALT_ROUNDS));
+            const existingUser = await getUserById(user.id);
+            existingUser.password = passwordHash;
+
+            await updateUser(existingUser);
+
+            res.sendStatus(200);
         } catch (e) {
             console.error(e);
             res.sendStatus(500);
