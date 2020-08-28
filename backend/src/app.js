@@ -8,6 +8,7 @@ const addressesRouter = require('./routes/addresses');
 const counterTypeRouter = require('./routes/counter_types');
 const counterRouter = require('./routes/counters');
 const counterValuesRouter = require('./routes/counter_values');
+const profileRouter = require('./routes/profile');
 
 const swaggerUi = require('swagger-ui-express');
 
@@ -29,5 +30,6 @@ app.use('/api/v1/counter_types', counterTypeRouter);
 app.use('/api/v1/addresses', addressesRouter);
 app.use('/api/v1/counters', counterRouter);
 app.use('/api/v1/counters/:counter_id/values', counterValuesRouter);
+app.use('/api/v1/profile', profileRouter);
 
 module.exports = app;
