@@ -4,7 +4,7 @@ const authenticateJWT = require("../middlewares/authenticateJWT");
 const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser");
 const urlencodedParser = bodyParser.urlencoded({extended: false});
-const {profileValidation, passwordChangeValidation} = require("../middlewares/profile_validation");
+const {profileValidation, passwordValidation} = require("../middlewares/profile_validation");
 const {getUserById, updateUser} = require("../services/userService");
 require('dotenv').config();
 
@@ -42,7 +42,7 @@ router.get('/', authenticateJWT, async (req, res) => {
         }
     }),
 
-    router.put('/change_password', [authenticateJWT, urlencodedParser, passwordChangeValidation], async (req, res) => {
+    router.put('/change_password', [authenticateJWT, urlencodedParser, passwordValidation], async (req, res) => {
         const user = req.user;
         const password = req.body.password;
         try {
