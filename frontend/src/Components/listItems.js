@@ -9,6 +9,8 @@ import PeopleIcon from '@material-ui/icons/People';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import LayersIcon from '@material-ui/icons/Layers';
 import AssignmentIcon from '@material-ui/icons/Assignment';
+import { Link } from 'react-router-dom'
+
 
 export const mainListItems = (
   <div>
@@ -18,12 +20,18 @@ export const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="Dashboard" />
     </ListItem>
+
+
+    <Link to='/pokazania'>
     <ListItem button>
       <ListItemIcon>
         <ShoppingCartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Orders" />
-    </ListItem>
+      </ListItemIcon>          
+      <ListItemText primary="Подать показания" />          
+      </ListItem>
+      </Link>
+
+      
     <ListItem button>
       <ListItemIcon>
         <PeopleIcon />

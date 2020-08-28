@@ -7,6 +7,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Title from './Title';
+import Pokazania from './Pokazania'
 
 // Generate Order Data
 function createData(id, date, name, shipTo, paymentMethod, amount) {
@@ -62,7 +63,7 @@ export default function Orders() {
         <Link color="primary" href="#" onClick={preventDefault}>
           See more orders
         </Link>
-      </div>
-    </React.Fragment>
+      </div>      
+    </React.Fragment>   
   );
 }
