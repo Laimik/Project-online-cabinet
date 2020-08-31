@@ -752,6 +752,82 @@
           }
         }
       }
+    },
+    "/api/v1/profile":{
+      "get": {
+        "tags": [
+          "Profile"
+        ],
+        "summary": "Get profile",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All ok, profile received",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#components/schemas/User"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong"
+          }
+        }
+      }
+    },
+    "/api/v1/profile/change_password": {
+      "put": {
+        "tags": ["Profile"],
+        "summary": "Change password",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "example": "somepassword"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "All ok, counter changed",
+            "content":{
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Address not found"
+          },
+          "500": {
+            "description": "Something went wrong"
+          }
+        }
+      }
     }
   },
 
@@ -770,6 +846,13 @@
             "type": "string"
           },
           "phone_number": {
+            "type": "string"
+          }
+        }
+      },
+      "NewPassword": {
+        "properties": {
+          "password": {
             "type": "string"
           }
         }

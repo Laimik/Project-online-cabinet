@@ -6,11 +6,12 @@ const bodyParser = require("body-parser");
 const urlencodedParser = bodyParser.urlencoded({extended: false});
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
+const {passwordValidation} = require("../middlewares/profile_validation");
 const { signInValidation, signUpValidation} = require("../middlewares/auth_validation");
 const {getUserByEmail, createUser} = require("../services/userService");
 
 
-router.post("/sign_up", [urlencodedParser, signUpValidation], async function (req, res) {
+router.post("/sign_up", [urlencodedParser, signUpValidation, passwordValidation], async function (req, res) {
   if(!req.body) return res.sendStatus(400);
   const name = req.body.name;
   const email = req.body.email;
@@ -32,7 +33,7 @@ router.post("/sign_up", [urlencodedParser, signUpValidation], async function (re
   }
 });
 
-router.post("/sign_in", [ urlencodedParser, signInValidation,signInValidation ], async function (req, res) {
+router.post("/sign_in", [ urlencodedParser, signInValidation], async function (req, res) {
   if(!req.body) return res.sendStatus(400);
   const email = req.body.email;
   const password = req.body.password;
