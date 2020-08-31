@@ -6,21 +6,19 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Dashboard from '../src/Components/Dashboard'
 import {BrowserRouter, Route } from 'react-router-dom'
 import  Pokazania from './Components/Pokazania'
+import SignIn from "./Screens/SignIn";
 
 
 function App() {
-  return (
-    <div>
-     <BrowserRouter> 
-     <Route exact path='/' component={Dashboard} />
-     <Route path='/pokazania' component={Pokazania} />    
-    
-    </BrowserRouter>
-  
-    
-
-    </div>
-  );
+    return (
+        <div>
+            <BrowserRouter>
+                <Route exact path='/sign_in' component={SignIn} />
+                <Route exact path='/' component={Dashboard} />
+                <Route path='/pokazania' component={Pokazania} />
+            </BrowserRouter>
+        </div>
+    );
 }
 
 export default App;
