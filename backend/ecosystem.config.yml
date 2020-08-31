@@ -1,0 +1,5 @@
+apps:
+  - script   : ./bin/www
+    name     : 'backend'
+    instances: 1
+    exec_mode: cluster
