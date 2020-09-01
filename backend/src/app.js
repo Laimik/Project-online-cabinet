@@ -13,6 +13,7 @@ const profileRouter = require('./routes/profile');
 const swaggerUi = require('swagger-ui-express');
 
 const swaggerDocument = require('../swagger.json');
+const cors = require("cors");
 swaggerDocument.host=""
 swaggerDocument.port=process.env.HTTP_PORT || '3000'
 
@@ -22,6 +23,23 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+const whitelist = ['localhost'];
+const corsOptions = {
+    origin: function (origin, callback) {
+        if (origin) {
+            const {hostname} = new URL(origin);
+            if (whitelist.indexOf(hostname) !== -1) {
+                callback(null, true);
+            } else {
+                callback(new Error(`${hostname} (${origin}) Not allowed by CORS`));
+            }
+        } else {
+            callback(null, true);
+        }
+    }
+};
+app.use(cors(corsOptions));
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
