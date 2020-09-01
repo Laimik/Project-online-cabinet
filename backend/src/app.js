@@ -26,13 +26,16 @@ app.use(cookieParser());
 
 const whitelist = ['localhost'];
 const corsOptions = {
-    credentials: true,
     origin: function (origin, callback) {
-        const { hostname } = new URL(origin);
-        if (whitelist.indexOf(hostname) !== -1) {
-            callback(null, true)
+        if (origin) {
+            const {hostname} = new URL(origin);
+            if (whitelist.indexOf(hostname) !== -1) {
+                callback(null, true);
+            } else {
+                callback(new Error(`${hostname} (${origin}) Not allowed by CORS`));
+            }
         } else {
-            callback(new Error(`${hostname} (${origin}) Not allowed by CORS`));
+            callback(null, true);
         }
     }
 };
