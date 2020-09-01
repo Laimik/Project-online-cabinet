@@ -6,23 +6,26 @@ import CardActions from "@material-ui/core/CardActions";
 import Card from "@material-ui/core/Card";
 import styles from "./styles.css";
 import {CardHeader} from "@material-ui/core";
-import {signIn} from "../../Services/authService";
+import {signIn, signUp} from "../../Services/authService";
 import {Redirect} from "react-router";
 import {Link} from "react-router-dom";
 
-class SignIn extends Component {
+class SignUp extends Component {
     constructor(props) {
         super(props)
         this.state = {
             signedIn: false,
             email: "",
-            password: ""
+            password: "",
+            name: "",
+            phoneNumber: ""
         }
     }
 
     submit = async () => {
-       await signIn(this.state.email, this.state.password);
-       this.setState({signedIn: true});
+        await signUp(this.state.email, this.state.password, this.state.name, this.state.phoneNumber);
+        await signIn(this.state.email, this.state.password);
+        this.setState({signedIn: true});
     };
 
     render() {
@@ -36,7 +39,7 @@ class SignIn extends Component {
                         await this.submit();
                     }}>
                         <Card>
-                            <CardHeader title={'Форма входа'}/>
+                            <CardHeader title={'Форма регистрации'}/>
                             <CardContent>
                                 <TextField
                                     required
@@ -56,13 +59,29 @@ class SignIn extends Component {
                                         this.setState({password: e.target.value})
                                     }}
                                 />
+                                <TextField
+                                    required
+                                    id="standard-required"
+                                    label="Имя"
+                                    onChange={(e) => {
+                                        this.setState({name: e.target.value})
+                                    }}
+                                />
+                                <TextField
+                                    required
+                                    id="standard-required"
+                                    label="Номер Телефона"
+                                    onChange={(e) => {
+                                        this.setState({phoneNumber: e.target.value})
+                                    }}
+                                />
                             </CardContent>
                             <CardActions>
-                                <Link to="/sign_up" >
-                                    <Button size="small">Регистрация</Button>
+                                <Link to="/sign_in">
+                                    <Button size="small">Вход</Button>
                                 </Link>
                                 <Button size="small" color="primary" type={"submit"}>
-                                    Вход
+                                    Зарегестрироваться
                                 </Button>
                             </CardActions>
                         </Card>
@@ -73,4 +92,4 @@ class SignIn extends Component {
     }
 }
 
-export default SignIn;
+export default SignUp;

@@ -7,17 +7,17 @@ import Dashboard from '../src/Components/Dashboard'
 import {BrowserRouter, Route } from 'react-router-dom'
 import  Pokazania from './Components/Pokazania'
 import SignIn from "./Screens/SignIn";
+import SignUp from "./Screens/SignUp";
 
 
 function App() {
     return (
-        <div>
-            <BrowserRouter>
-                <Route exact path='/sign_in' component={SignIn} />
-                <Route exact path='/' component={Dashboard} />
-                <Route path='/pokazania' component={Pokazania} />
-            </BrowserRouter>
-        </div>
+        <BrowserRouter>
+            <Route exact path='/sign_in' component={SignIn} />
+            <Route exact path='/sign_up' component={SignUp} />
+            <Route exact path='/' component={Dashboard} />
+            <Route path='/pokazania' component={Pokazania} />
+        </BrowserRouter>
     );
 }
 
