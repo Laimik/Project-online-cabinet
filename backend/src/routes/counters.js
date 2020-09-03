@@ -11,7 +11,7 @@ const { getCounters, getCounterById, createCounter, updateCounter, deleteCounter
 router.get('/', authenticateJWT, async (req, res) => {
         const user = req.user;
         try {
-            res.status(200).json(await getCounters(user));
+            res.status(200).json(await getCounters(user.id));
         } catch (e){
             console.error(e);
             res.sendStatus(500);
