@@ -9,6 +9,7 @@ import {CardHeader} from "@material-ui/core";
 import {signIn, signUp} from "../../Services/authService";
 import {Redirect} from "react-router";
 import {Link} from "react-router-dom";
+import {style} from "./styles.css";
 
 class SignUp extends Component {
     constructor(props) {
