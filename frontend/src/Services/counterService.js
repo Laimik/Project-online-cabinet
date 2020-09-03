@@ -1,8 +1,8 @@
 import {getToken} from "./authService";
 
-export async function getAddresses() {
+export async function getCounters() {
     const response = await fetch(
-        `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/api/v1/addresses/`, {
+        `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/api/v1/counters`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -13,13 +13,13 @@ export async function getAddresses() {
     if (response.ok){
         return await response.json();
     } else {
-        return [];
+        return null;
     }
 }
 
-export async function getAddressById(id) {
+export async function getCounterById(id) {
     const response = await fetch(
-        `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/api/v1/addresses/${id}`,
+        `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/api/v1/counters/${id}`,
         {
             method: 'GET',
             headers: {
@@ -35,9 +35,9 @@ export async function getAddressById(id) {
     }
 }
 
-export async function updateAddress(address) {
+export async function updateCounter(counter) {
     const response = await fetch(
-        `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/api/v1/addresses/${address.id}`,
+        `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/api/v1/addresses/${counter.id}`,
         {
             method: 'PUT',
             headers: {
@@ -46,27 +46,8 @@ export async function updateAddress(address) {
                 'Authorization': 'Bearer ' + await getToken()
             },
             body: JSON.stringify({
-                address: address.address,
-                apartment: address.apartment,
-                fias_code: address.fias_code
+                name: counter.name,
             }),
-        });
-    if (!response.ok){
-        //ToDo обработка ошибок обновления
-        //throw new Error( await response.json);
-    }
-}
-
-export async function deleteAddress(address) {
-    const response = await fetch(
-        `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/api/v1/addresses/${address.id}`,
-        {
-            method: 'DELETE',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + await getToken()
-            }
         });
     if (!response.ok){
         //ToDo обработка ошибок обновления

@@ -1,3 +1,5 @@
+const TOKEN_KEY = 'token';
+
 export async function isAuthenticated() {
     return !!(await getToken());
 }
@@ -44,10 +46,14 @@ export async function signUp(email, password, name, phoneNumber) {
     }
 }
 
+export async function signOut() {
+   localStorage.removeItem(TOKEN_KEY);
+}
+
 export async function setToken(token) {
-    localStorage.setItem('token', token);
+    localStorage.setItem(TOKEN_KEY, token);
 }
 
 export async function getToken() {
-    return localStorage.getItem('token');
+    return localStorage.getItem(TOKEN_KEY);
 }
