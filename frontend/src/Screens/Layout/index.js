@@ -18,10 +18,13 @@ import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import {signOut} from "../../Services/authService";
-import {AccountCircle} from "@material-ui/icons";
+import {AccountCircle, ExpandLess, ExpandMore, FlashOn, InvertColors, StarBorder, Whatshot} from "@material-ui/icons";
 import SpeedIcon from '@material-ui/icons/Speed';
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
 import Link from "@material-ui/core/Link";
+import Collapse from "@material-ui/core/Collapse";
+import FeedbackIcon from '@material-ui/icons/Feedback';
+
 
 const drawerWidth = 240;
 
@@ -100,6 +103,9 @@ export default function Layout(props) {
     const handleDrawerClose = () => {
         setOpen(false);
     };
+    const handleClick = () => {
+        setOpen(!open);
+    };
 
     return (
         <div className={classes.root}>
@@ -153,13 +159,42 @@ export default function Layout(props) {
                         <ListItemIcon><AccountCircle /></ListItemIcon>
                         <ListItemText primary={'Личный кабинет'} />
                     </ListItem>
-                    <ListItem button component="a" href={'/pokazania'} key={'Показания'}>
-                        <ListItemIcon><SpeedIcon /></ListItemIcon>
+                    <ListItem button onClick={handleClick}>
+                        <ListItemIcon>
+                            <SpeedIcon />
+                        </ListItemIcon>
                         <ListItemText primary={'Показания'} />
+                        {open ? <ExpandLess /> : <ExpandMore />}
                     </ListItem>
+                    <Collapse in={open} timeout="auto" unmountOnExit>
+                        <List component="div" disablePadding>
+                            <ListItem button component="a" href={'/pokazania'} key={'Вода'}>
+                                <ListItemIcon>
+                                    <InvertColors />
+                                </ListItemIcon>
+                                <ListItemText primary={'Вода'} />
+                            </ListItem>
+                            <ListItem button>
+                                <ListItemIcon>
+                                    <Whatshot />
+                                </ListItemIcon>
+                                <ListItemText primary={'Газ'} />
+                            </ListItem>
+                            <ListItem button>
+                                <ListItemIcon>
+                                    <FlashOn />
+                                </ListItemIcon>
+                                <ListItemText primary={'Электричество'} />
+                            </ListItem>
+                        </List>
+                    </Collapse>
                 </List>
                 <Divider />
                 <List>
+                    <ListItem button component="a" href={'/feedback'} key={'Обратная связь'}>
+                        <ListItemIcon><FeedbackIcon /></ListItemIcon>
+                        <ListItemText primary={'Обратная связь'} />
+                    </ListItem>
                     <ListItem button key={'Выход'} onClick={async () => {
                         await signOut();
                         window.location.reload(false);

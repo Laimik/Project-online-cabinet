@@ -9,6 +9,7 @@ import  Pokazania from './Components/Pokazania'
 import SignIn from "./Screens/SignIn";
 import SignUp from "./Screens/SignUp";
 import Profile from "./Screens/Profile";
+import Feedback from "./Screens/Feedback";
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
             <Route exact path='/' component={Dashboard} />
             <Route path='/pokazania' component={Pokazania} />
             <Route path='/profile' component={Profile}/>
+            <Route path={'/feedback'} component={Feedback}/>
         </BrowserRouter>
     );
 }
