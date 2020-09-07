@@ -12,51 +12,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Alert from '@material-ui/lab/Alert';
 
-async function signIn(email, password) {
-  const response = await fetch(
-      `http://localhost:3000/auth/sign_in`, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-              
-          },
-          body: JSON.stringify({
-              email,
-              password,
-          }),
-      });
+import {LoginForm} from '../loginForm/loginForm'
 
-      console.log(response.body)   
-  if (response.ok){
-      const json = await response.json();
-      //await setToken(json.accessToken);
-      console.log(json)
-  }
-}
-export async function signUp(email, password, name, phoneNumber) {
-  const response = await fetch(
-      `http://localhost:3000/auth/sign_up`, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-              email,
-              password,
-              name,
-              phone_number: phoneNumber
-          }),
-      });
-  console.log(response.body)
-  if (!response.ok){
-      //ToDo обработка ошибок регистрации
-      //throw new Error( await response.json);
-  }
-}
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -123,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export  function LoginForm() {
+export  function LoginTabs() {
   const classes = useStyles();
   const [value,setValue] = React.useState(0);
   const [emailValue, setEmailValue] = React.useState('');
@@ -156,11 +113,7 @@ export  function LoginForm() {
 //     this.setState({ value: event.target.value });
 
 // }
-const login = async () => {
-  await signIn(this.state.email, this.state.password);
-  this.setState({signedIn: true});
-};  
-const  handleEnter = async(event) =>
+  const handleEnter = (event) =>
   {
     event.preventDefault();
     //console.log("enter " + value + emailValue)
@@ -174,15 +127,11 @@ const  handleEnter = async(event) =>
         }else{
         //  console.log("email ok")
           setIsWrongEmail(false)
-          await signIn(emailValue, passwordValue);
-          // //this.setState({signedIn: true});
-           console.log("signed")
-         
-        } 
+        }
     }
     
   }
-  const handleRegistration = async(event) => {
+  const handleRegistration = (event) => {
     event.preventDefault();
     if (!emailValue || !passwordValue || !passwordDoubleValue){
       setRequiredEmpty(true);
@@ -194,13 +143,10 @@ const  handleEnter = async(event) =>
       }else{
       //  console.log("email ok")
         setIsWrongEmail(false)
-        if (passwordValue!==passwordDoubleValue) {setIsPasswordsEqual(false) 
+        if (passwordValue!=passwordDoubleValue) {setIsPasswordsEqual(false) 
       //    console.log("pwd no")
         } else {setIsPasswordsEqual(true)
       //    console.log("pwd ok")
-          await signUp(emailValue, passwordValue,'name', '0000');
-          // //this.setState({signedIn: true});
-           console.log("signed up")
         }
       }     
     }
@@ -217,42 +163,7 @@ const  handleEnter = async(event) =>
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0} className={classes.authTabs}>
-        <form className={classes.authForm} onSubmit={handleEnter}>
-            <TextField
-            
-            id="auth-email"
-            label="Электронная почта"
-            variant="outlined"
-            onChange={handleChangeEmail}
-            value={emailValue}
-            required
-            />
-            <TextField
-                id="auth-password"
-                label="Пароль"
-                type="password"
-                autoComplete="current-password"
-                variant="outlined"
-                onChange={handleChangePassword}
-                value={passwordValue}
-                className={classBadInput}
-                required
-            />
-
-            <FormControlLabel
-                control={
-                    <Checkbox  name="saveSession" color="primary"/>
-                }
-                label="Запомнить меня"
-            />    
-            <Button variant="contained" color="primary" onClick={handleEnter} type="submit">
-                Войти
-            </Button>
-            { requiredEmpty && <Alert className={classes.authAlert} severity="error">Необходимо заполнить все поля</Alert>}
-            { (!requiredEmpty && isWrongEmail) && <Alert className={classes.authAlert} severity="error">Email не соответствует формату</Alert>}
-            { (!requiredEmpty && !isWrongEmail &&isWrongPassword) && <Alert className={classes.authAlert} severity="error">Неверная пара логин и пароль</Alert>}
-
-        </form>
+        <LoginForm classes={classes} handleEnter={handleEnter} requiredEmpty={requiredEmpty} isWrongEmail={isWrongEmail} isWrongPassword={isWrongPassword}/>
       </TabPanel>
       <TabPanel value={value} index={1}>
       <form className={classes.authForm} onSubmit={handleRegistration}>
