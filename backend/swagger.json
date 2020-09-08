@@ -828,6 +828,78 @@
           }
         }
       }
+    },
+    "/api/v1/rate": {
+      "get": {
+        "tags": [
+          "Rate"
+        ],
+        "summary": "Get all rates",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All ok, all rates received",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#components/schemas/Rate"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong"
+          }
+        }
+      }
+    },
+    "/api/v1/rate/{id}": {
+      "get": {
+        "tags": [
+          "Rate"
+        ],
+        "summary": "Get rate by id",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All ok, rate received",
+            "content":{
+              "application/json": {
+                "schema": {
+                  "$ref": "#components/schemas/Rate"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Counter type not found"
+          },
+          "500": {
+            "description": "Something went wrong"
+          }
+        }
+      }
     }
   },
 
@@ -953,6 +1025,16 @@
             "type": "number",
             "example": 15.6,
             "format": "float"
+          }
+        }
+      },
+      "Rate": {
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "rate": {
+            "type": "string"
           }
         }
       }

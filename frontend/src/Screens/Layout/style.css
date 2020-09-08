@@ -1,0 +1,11 @@
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+.phone{
+    padding: 0 10% 0 0;
+}
+.email{
+    padding: 0 0 0 10%;
+}
