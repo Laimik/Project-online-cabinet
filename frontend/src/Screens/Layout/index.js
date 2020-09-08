@@ -15,18 +15,39 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 import {signOut} from "../../Services/authService";
-import {AccountCircle, ExpandLess, ExpandMore, FlashOn, InvertColors, StarBorder, Whatshot} from "@material-ui/icons";
+import {
+    AccountCircle,
+    ExpandLess,
+    ExpandMore,
+    FlashOn,
+    InvertColors,
+    StarBorder,
+    Whatshot
+} from "@material-ui/icons";
 import SpeedIcon from '@material-ui/icons/Speed';
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
 import Link from "@material-ui/core/Link";
 import Collapse from "@material-ui/core/Collapse";
-import FeedbackIcon from '@material-ui/icons/Feedback';
-
+import style from "./style.css"
+import Box from "@material-ui/core/Box";
 
 const drawerWidth = 240;
+
+function Copyright() {
+    return (
+        <Typography variant="body2" color="textSecondary" align="center">
+            <b className={"phone"}>Телефон: +79990001122</b>
+            {'Copyright © '}
+            <Link color="inherit" href="https://material-ui.com/">
+                Your Website
+            </Link>{' '}
+            {new Date().getFullYear()}
+            {'.'}
+            <b className={"email"}>Почта: example@mail.com</b>
+        </Typography>
+    );
+}
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -174,7 +195,7 @@ export default function Layout(props) {
                                 </ListItemIcon>
                                 <ListItemText primary={'Вода'} />
                             </ListItem>
-                            <ListItem button>
+                            <ListItem button component="a" href={'/gas'} key={'Газ'}>
                                 <ListItemIcon>
                                     <Whatshot />
                                 </ListItemIcon>
@@ -191,10 +212,6 @@ export default function Layout(props) {
                 </List>
                 <Divider />
                 <List>
-                    <ListItem button component="a" href={'/feedback'} key={'Обратная связь'}>
-                        <ListItemIcon><FeedbackIcon /></ListItemIcon>
-                        <ListItemText primary={'Обратная связь'} />
-                    </ListItem>
                     <ListItem button key={'Выход'} onClick={async () => {
                         await signOut();
                         window.location.reload(false);
@@ -208,6 +225,9 @@ export default function Layout(props) {
                 <div className={classes.toolbar} />
                 {props.children}
             </main>
+            <Box className={"footer"}pt={4}>
+                <Copyright />
+            </Box>
         </div>
     );
 }
