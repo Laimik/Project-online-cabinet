@@ -9,7 +9,7 @@ const counterTypeRouter = require('./routes/counter_types');
 const counterRouter = require('./routes/counters');
 const counterValuesRouter = require('./routes/counter_values');
 const profileRouter = require('./routes/profile');
-const rateRouter = require('./routes/rate');
+const rateRouter = require('./routes/rates');
 
 const swaggerUi = require('swagger-ui-express');
 

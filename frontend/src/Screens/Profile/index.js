@@ -105,10 +105,10 @@ class Profile extends Component {
                                     <TableCell component="th" scope="row">
                                         {this.state.counterTypes.find(counterType => counterType.id === counter.counter_type_id).name}
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell align="right">
                                         {counter.name}
                                     </TableCell>
-                                    <TableCell align="right">{}</TableCell>
+                                    <TableCell>{}</TableCell>
                                 </TableRow>)
                         } else {
                             return null;

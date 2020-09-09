@@ -858,6 +858,45 @@
             "description": "Something went wrong"
           }
         }
+      },
+      "post": {
+        "tags": [
+          "Rate"
+        ],
+        "summary": "Create new Rate",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewRate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "All ok, rate was create",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Rate"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong"
+          }
+        }
       }
     },
     "/api/v1/rate/{id}": {
@@ -899,9 +938,85 @@
             "description": "Something went wrong"
           }
         }
+      },
+      "put": {
+        "tags": ["Rate"],
+        "summary": "Change rate",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewRate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "All ok, rate changed",
+            "content":{
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Rate"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Rate not found"
+          },
+          "500": {
+            "description": "Something went wrong"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Rate"],
+        "summary": "Delete rate by id",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All ok, rate was deleted"
+          },
+          "500": {
+            "description": "Something went wrong"
+          }
+        }
       }
     }
   },
+
 
 
   "components": {
@@ -1035,6 +1150,29 @@
           },
           "rate": {
             "type": "string"
+          },
+          "counter_type_id": {
+            "type": "integer"
+          },
+          "date_begin": {
+            "type": "string",
+            "example": "2020-01-01",
+            "format": "date"
+          }
+        }
+      },
+      "NewRate": {
+        "properties": {
+          "rate": {
+            "type": "string"
+          },
+          "counter_type_id": {
+            "type": "integer"
+          },
+          "date_begin": {
+            "type": "string",
+            "example": "2020-01-01",
+            "format": "date"
           }
         }
       }

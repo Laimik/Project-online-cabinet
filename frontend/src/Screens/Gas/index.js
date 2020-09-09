@@ -15,6 +15,17 @@ import TableBody from "@material-ui/core/TableBody";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import Layout from "../Layout";
+import {getProfile} from "../../Services/profileService";
+import {getAddresses} from "../../Services/addressService";
+import {getCounters} from "../../Services/counterService";
+import {getCounterTypes} from "../../Services/counterTypeService";
+import {getCounterValues} from "../../Services/counterValueService";
+import authGuard from "../../Components/AuthGuard";
+import MenuItem from "@material-ui/core/MenuItem";
+import Container from "@material-ui/core/Container";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import {getRate, getRateById} from "../../Services/rateService";
+
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
@@ -34,16 +45,12 @@ const StyledTableRow = withStyles((theme) => ({
     },
 }))(TableRow);
 
-function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
+function createData(address, date, value, pay) {
+    return { address, date, value, pay };
 }
 
 const rows = [
     createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
 ];
 
 class Gas extends Component {
@@ -51,79 +58,117 @@ class Gas extends Component {
         super(props)
         this.state = {
             loading: true,
+            address: undefined,
             addresses: [],
             counter: [],
             counterType: [],
-            expandedAddresses: []
+            counterValue: [],
+            rate: []
         }
     }
 
+    handleChange(event) {
+        const selectedId = event.target.value;
+        for (const address of this.state.addresses) {
+            if (selectedId === address.id) {
+                this.setState({
+                    address: address
+                });
+            }
+        }
+    }
+
+    async componentDidMount() {
+        const addresses = await getAddresses();
+        const counters = await getCounters();
+        const counterTypes = await getCounterTypes();
+        const rate = await getRate()
+
+        const address = addresses[0];
+        const gasCounterType = counterTypes
+            .find(counterType => counterType.name === 'Газ');
+        // console.log(gasCounterType);
+
+        const gasCounter = counters
+            .find(counter => counter.counter_type_id === gasCounterType.id
+                && counter.address_id === address.id);
+        // console.log(gasCounter);
+
+        const counterValues = await getCounterValues(gasCounter);
+        // console.log(counterValues);
+
+        const gasRate = rate
+            .find(rate => rate.counter_type_id === gasCounterType.id);
+
+        this.setState({
+            loading: false,
+            addresses: addresses,
+            address: address,
+            counters: counters,
+            counterTypes: counterTypes,
+            counterValues: counterValues,
+            rate: gasRate
+        })
+    }
+
     render() {
-        if (this.state.signedIn) {
-            return <Redirect to={'/'}/>
+        if (this.state.loading) {
+            return <Container>
+                <CircularProgress/>
+            </Container>;
         } else {
             return (
                 <Layout label={'Газ'}>
-                <form>
-                <FormControl variant="outlined">
-                    <InputLabel htmlFor="outlined-age-native-simple">Age</InputLabel>
-                    <Select
-                        native
-                        label="Age"
-                        inputProps={{
-                            name: 'age',
-                            id: 'outlined-age-native-simple',
-                        }}
-                    >
-                        <option aria-label="None" value="" />
-                        <option value={10}>Ten</option>
-                        <option value={20}>Twenty</option>
-                        <option value={30}>Thirty</option>
-                    </Select>
-                </FormControl>
-            <div>
-                <TextField
-                    label="Size"
-                    id="outlined-size-small"
-                    defaultValue="Small"
-                    variant="outlined"
-                    size="small"
-                />
-            </div>
-                    <Button variant="contained" color="primary">
-                        Primary
-                    </Button>
-                    <TableContainer component={Paper}>
-                        <Table aria-label="customized table">
-                            <TableHead>
-                                <TableRow>
-                                    <StyledTableCell>Dessert (100g serving)</StyledTableCell>
-                                    <StyledTableCell align="right">Calories</StyledTableCell>
-                                    <StyledTableCell align="right">Fat&nbsp;(g)</StyledTableCell>
-                                    <StyledTableCell align="right">Carbs&nbsp;(g)</StyledTableCell>
-                                    <StyledTableCell align="right">Protein&nbsp;(g)</StyledTableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {rows.map((row) => (
-                                    <StyledTableRow key={row.name}>
-                                        <StyledTableCell component="th" scope="row">
-                                            {row.name}
-                                        </StyledTableCell>
-                                        <StyledTableCell align="right">{row.calories}</StyledTableCell>
-                                        <StyledTableCell align="right">{row.fat}</StyledTableCell>
-                                        <StyledTableCell align="right">{row.carbs}</StyledTableCell>
-                                        <StyledTableCell align="right">{row.protein}</StyledTableCell>
-                                    </StyledTableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                </form>
+                    <form>
+                        <FormControl variant="outlined">
+                            <InputLabel htmlFor="outlined-age-native-simple">Адрес</InputLabel>
+                            <Select
+                                label="Адрес"
+                                value={this.state.address.id}
+                                onChange={event => this.handleChange(event)}
+                            >
+                                {this.state.addresses.map(address => {
+                                    return <MenuItem key={address.id} value={address.id}>{address.address}</MenuItem>
+                                })}
+                            </Select>
+                        </FormControl>
+                        <p>Стоимость: {this.state.rate}</p>
+                        <div>
+                            <TextField
+                                label="Показание"
+                                id="outlined-size-small"
+                                variant="outlined"
+                                size="small"
+                            />
+                        </div>
+                        <Button variant="contained" color="primary">
+                            Добавить показания
+                        </Button>
+                        <TableContainer component={Paper}>
+                            <Table aria-label="customized table">
+                                <TableHead>
+                                    <TableRow>
+                                        <StyledTableCell align="right">Дата</StyledTableCell>
+                                        <StyledTableCell align="right">Показание</StyledTableCell>
+                                        <StyledTableCell align="right">Оплачено</StyledTableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {rows.map((row) => (
+                                        <StyledTableRow key={row.address}>
+                                            <StyledTableCell align="right">{row.date}</StyledTableCell>
+                                            <StyledTableCell align="right">{row.value}</StyledTableCell>
+                                            <StyledTableCell align="right">{row.pay}</StyledTableCell>
+                                        </StyledTableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </form>
                 </Layout>
             )
         }
     }
 }
 
-export default Gas;
+export default authGuard(Gas);
