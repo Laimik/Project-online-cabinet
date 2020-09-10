@@ -8,7 +8,9 @@
   "paths": {
     "/auth/sign_up": {
       "post": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "summary": "New user registration",
         "requestBody": {
           "required": true,
@@ -35,7 +37,9 @@
     },
     "/auth/sign_in": {
       "post": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "summary": "User authentication",
         "requestBody": {
           "required": true,
@@ -60,7 +64,7 @@
         "responses": {
           "200": {
             "description": "All ok, user successfully authenticated",
-            "content":{
+            "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
@@ -157,7 +161,9 @@
     },
     "/api/v1/addresses/{id}": {
       "get": {
-        "tags": ["Addresses"],
+        "tags": [
+          "Addresses"
+        ],
         "summary": "Get user address by id",
         "security": [
           {
@@ -177,7 +183,7 @@
         "responses": {
           "200": {
             "description": "All ok, address received",
-            "content":{
+            "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#components/schemas/Address"
@@ -194,7 +200,9 @@
         }
       },
       "put": {
-        "tags": ["Addresses"],
+        "tags": [
+          "Addresses"
+        ],
         "summary": "Change address",
         "security": [
           {
@@ -208,7 +216,6 @@
             "required": true,
             "schema": {
               "type": "integer"
-
             }
           }
         ],
@@ -225,7 +232,7 @@
         "responses": {
           "200": {
             "description": "All ok, address changed",
-            "content":{
+            "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#components/schemas/Address"
@@ -242,7 +249,9 @@
         }
       },
       "delete": {
-        "tags": ["Addresses"],
+        "tags": [
+          "Addresses"
+        ],
         "summary": "Get user address by id",
         "security": [
           {
@@ -302,45 +311,45 @@
     },
     "/api/v1/counter_types/{id}": {
       "get": {
-          "tags": [
-            "CounterType"
-          ],
-          "summary": "Get counter type by id",
-          "security": [
-            {
-              "BearerAuth": []
-            }
-          ],
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "integer"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "All ok, counter type received",
-              "content":{
-                "application/json": {
-                  "schema": {
-                    "$ref": "#components/schemas/CounterType"
-                  }
-                }
-              }
-            },
-            "404": {
-              "description": "Counter type not found"
-            },
-            "500": {
-              "description": "Something went wrong"
+        "tags": [
+          "CounterType"
+        ],
+        "summary": "Get counter type by id",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
             }
           }
+        ],
+        "responses": {
+          "200": {
+            "description": "All ok, counter type received",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#components/schemas/CounterType"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Counter type not found"
+          },
+          "500": {
+            "description": "Something went wrong"
+          }
         }
-      },
+      }
+    },
     "/api/v1/counters": {
       "get": {
         "tags": [
@@ -413,7 +422,9 @@
     },
     "/api/v1/counters/{id}": {
       "get": {
-        "tags": ["Counter"],
+        "tags": [
+          "Counter"
+        ],
         "summary": "Get user counter by id",
         "security": [
           {
@@ -433,7 +444,7 @@
         "responses": {
           "200": {
             "description": "All ok, counter received",
-            "content":{
+            "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#components/schemas/Counter"
@@ -450,7 +461,9 @@
         }
       },
       "put": {
-        "tags": ["Counter"],
+        "tags": [
+          "Counter"
+        ],
         "summary": "Change counter",
         "security": [
           {
@@ -464,7 +477,6 @@
             "required": true,
             "schema": {
               "type": "integer"
-
             }
           }
         ],
@@ -481,7 +493,7 @@
         "responses": {
           "200": {
             "description": "All ok, counter changed",
-            "content":{
+            "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Counter"
@@ -498,7 +510,9 @@
         }
       },
       "delete": {
-        "tags": ["Counter"],
+        "tags": [
+          "Counter"
+        ],
         "summary": "Delete user counter by id",
         "security": [
           {
@@ -617,7 +631,9 @@
     },
     "/api/v1/counters/{counter_id}/values/{id}": {
       "get": {
-        "tags": ["Counter value"],
+        "tags": [
+          "Counter value"
+        ],
         "summary": "get counter value by id",
         "security": [
           {
@@ -645,7 +661,7 @@
         "responses": {
           "200": {
             "description": "All ok, counter received",
-            "content":{
+            "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#components/schemas/Counter"
@@ -662,7 +678,9 @@
         }
       },
       "put": {
-        "tags": ["Counter value"],
+        "tags": [
+          "Counter value"
+        ],
         "summary": "Change counter value",
         "security": [
           {
@@ -684,7 +702,6 @@
             "required": true,
             "schema": {
               "type": "integer"
-
             }
           }
         ],
@@ -701,7 +718,7 @@
         "responses": {
           "200": {
             "description": "All ok, counter changed",
-            "content":{
+            "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CounterValue"
@@ -718,7 +735,9 @@
         }
       },
       "delete": {
-        "tags": ["Counter value"],
+        "tags": [
+          "Counter value"
+        ],
         "summary": "Delete counter values counter by id",
         "security": [
           {
@@ -753,7 +772,7 @@
         }
       }
     },
-    "/api/v1/profile":{
+    "/api/v1/profile": {
       "get": {
         "tags": [
           "Profile"
@@ -786,7 +805,9 @@
     },
     "/api/v1/profile/change_password": {
       "put": {
-        "tags": ["Profile"],
+        "tags": [
+          "Profile"
+        ],
         "summary": "Change password",
         "security": [
           {
@@ -812,7 +833,7 @@
         "responses": {
           "200": {
             "description": "All ok, counter changed",
-            "content":{
+            "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/User"
@@ -923,7 +944,7 @@
         "responses": {
           "200": {
             "description": "All ok, rate received",
-            "content":{
+            "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#components/schemas/Rate"
@@ -940,7 +961,9 @@
         }
       },
       "put": {
-        "tags": ["Rate"],
+        "tags": [
+          "Rate"
+        ],
         "summary": "Change rate",
         "security": [
           {
@@ -954,7 +977,6 @@
             "required": true,
             "schema": {
               "type": "integer"
-
             }
           }
         ],
@@ -971,7 +993,7 @@
         "responses": {
           "200": {
             "description": "All ok, rate changed",
-            "content":{
+            "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Rate"
@@ -988,7 +1010,9 @@
         }
       },
       "delete": {
-        "tags": ["Rate"],
+        "tags": [
+          "Rate"
+        ],
         "summary": "Delete rate by id",
         "security": [
           {
@@ -1014,175 +1038,200 @@
           }
         }
       }
+    },
+    "/api/v1/rate/current": {
+      "get": {
+        "tags": [
+          "Rate"
+        ],
+        "summary": "Get all rates with last date",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All ok, all rates received",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#components/schemas/Rate"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong"
+          }
+        }
+      }
     }
   },
 
-
-
-  "components": {
-    "schemas": {
-      "User": {
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string"
-          },
-          "phone_number": {
-            "type": "string"
+    "components": {
+      "schemas": {
+        "User": {
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string"
+            },
+            "phone_number": {
+              "type": "string"
+            }
+          }
+        },
+        "NewPassword": {
+          "properties": {
+            "password": {
+              "type": "string"
+            }
+          }
+        },
+        "NewAddress": {
+          "properties": {
+            "address": {
+              "type": "string"
+            },
+            "apartments": {
+              "type": "integer"
+            },
+            "fias_code": {
+              "type": "string"
+            }
+          }
+        },
+        "Address": {
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "address": {
+              "type": "string"
+            },
+            "apartments": {
+              "type": "integer"
+            },
+            "fias_code": {
+              "type": "string"
+            }
+          }
+        },
+        "CounterType": {
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            }
+          }
+        },
+        "Counter": {
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            },
+            "address_id": {
+              "type": "integer"
+            },
+            "counter_type_id": {
+              "type": "integer"
+            }
+          }
+        },
+        "NewCounter": {
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "address_id": {
+              "type": "integer"
+            },
+            "counter_type_id": {
+              "type": "integer"
+            }
+          }
+        },
+        "CounterValue": {
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "registry_time": {
+              "type": "string",
+              "example": "2020-08-26",
+              "format": "date"
+            },
+            "value": {
+              "type": "number",
+              "example": 15.6,
+              "format": "float"
+            }
+          }
+        },
+        "NewCounterValue": {
+          "properties": {
+            "value": {
+              "type": "number",
+              "example": 15.6,
+              "format": "float"
+            }
+          }
+        },
+        "Rate": {
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "rate": {
+              "type": "string"
+            },
+            "counter_type_id": {
+              "type": "integer"
+            },
+            "date_begin": {
+              "type": "string",
+              "example": "2020-01-01",
+              "format": "date"
+            }
+          }
+        },
+        "NewRate": {
+          "properties": {
+            "rate": {
+              "type": "string"
+            },
+            "counter_type_id": {
+              "type": "integer"
+            },
+            "date_begin": {
+              "type": "string",
+              "example": "2020-01-01",
+              "format": "date"
+            }
           }
         }
       },
-      "NewPassword": {
-        "properties": {
-          "password": {
-            "type": "string"
-          }
+      "securitySchemes": {
+        "BearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
         }
-      },
-      "NewAddress": {
-        "properties": {
-          "address": {
-            "type": "string"
-          },
-          "apartments": {
-            "type": "integer"
-          },
-          "fias_code": {
-            "type": "string"
-          }
-        }
-      },
-      "Address": {
-        "properties": {
-          "id": {
-            "type": "integer"
-          },
-          "address": {
-            "type": "string"
-          },
-          "apartments": {
-            "type": "integer"
-          },
-          "fias_code": {
-            "type": "string"
-          }
-        }
-      },
-      "CounterType": {
-        "properties": {
-          "id": {
-            "type": "integer"
-          },
-          "name": {
-            "type": "string"
-          }
-        }
-      },
-      "Counter": {
-        "properties": {
-          "id": {
-            "type": "integer"
-          },
-          "name": {
-            "type": "string"
-          },
-          "address_id": {
-            "type": "integer"
-          },
-          "counter_type_id": {
-            "type": "integer"
-          }
-        }
-      },
-      "NewCounter": {
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "address_id": {
-            "type": "integer"
-          },
-          "counter_type_id": {
-            "type": "integer"
-          }
-        }
-      },
-      "CounterValue": {
-        "properties": {
-          "id": {
-            "type": "integer"
-          },
-          "registry_time": {
-            "type": "string",
-            "example": "2020-08-26",
-            "format": "date"
-          },
-          "value": {
-            "type": "number",
-            "example": 15.6,
-            "format": "float"
-          }
-        }
-      },
-      "NewCounterValue": {
-        "properties": {
-          "registry_time": {
-            "type": "string",
-            "example": "2020-08-26",
-            "format": "date"
-          },
-          "value": {
-            "type": "number",
-            "example": 15.6,
-            "format": "float"
-          }
-        }
-      },
-      "Rate": {
-        "properties": {
-          "id": {
-            "type": "integer"
-          },
-          "rate": {
-            "type": "string"
-          },
-          "counter_type_id": {
-            "type": "integer"
-          },
-          "date_begin": {
-            "type": "string",
-            "example": "2020-01-01",
-            "format": "date"
-          }
-        }
-      },
-      "NewRate": {
-        "properties": {
-          "rate": {
-            "type": "string"
-          },
-          "counter_type_id": {
-            "type": "integer"
-          },
-          "date_begin": {
-            "type": "string",
-            "example": "2020-01-01",
-            "format": "date"
-          }
-        }
-      }
-    },
-    "securitySchemes": {
-      "BearerAuth": {
-        "type":"http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
       }
     }
   }
-}
+

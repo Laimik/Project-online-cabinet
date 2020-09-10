@@ -11,28 +11,32 @@ module.exports = {
     // ]
     getRates: async (options) => {
         const pool = await require("../database/database").getConnectionPool();
-        let query = 'SELECT * FROM rate';
+        let query = 'SELECT * FROM rate\n';
         const args = [];
 
-        if (options.where) {
-            let where = 'WHERE ';
-            if (options.where.dateBeginLte) {
-                where += 'date_begin <= ?';
-                args.push(options.where.dateBeginLte);
+        if (options) {
+            if (options.where) {
+                let where = 'WHERE ';
+                if (options.where.dateBeginLte) {
+                    where += 'date_begin <= ?\n';
+                    args.push(options.where.dateBeginLte);
+                }
+
+                query += where;
             }
 
-            query += where;
-        }
+            if (options.orderBy) {
+                let orderBy = 'ORDER BY ';
+                for (let i = 0; i < options.orderBy.length; i++) {
+                    const orderByItem = options.orderBy[i];
+                    if (i > 0) orderBy += ', ';
+                    orderBy += `${orderByItem.field} ${orderByItem.desc ? 'DESC' : ''}`;
+                }
 
-        if (options.orderBy) {
-            let orderBy = 'ORDER BY ';
-            for (let i = 0; i < options.orderBy.length; i++) {
-                const orderByItem = options.orderBy[i];
-                if (i > 0) orderBy += ', ';
-                orderBy += `${orderByItem.field} ${orderByItem.desc ? 'DESC' : ''}`;
+                query += orderBy;
             }
 
-            query += orderBy;
+            console.log(query);
         }
 
         const [rows] = await pool.execute(

@@ -40,14 +40,13 @@ router.get('/:id', authenticateJWT, async (req, res) => {
 
 router.post('/', [authenticateJWT, urlencodedParser, counterValueValidation], async (req, res) => {
     const counterId = req.params.counter_id;
-    const registryTime = req.body.registry_time;
     const value = req.body.value;
     const user = req.user;
 
     try {
         const counter = await getCounterById(user.id, counterId);
         if (counter){
-            const counterValue = await createCounterValue(user.id, counterId, registryTime, value);
+            const counterValue = await createCounterValue(user.id, counterId, new Date(), value);
             res.status(200).json(counterValue);
         } else {
             res.sendStatus(404);

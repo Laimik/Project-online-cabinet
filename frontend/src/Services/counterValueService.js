@@ -34,3 +34,24 @@ export async function getCounterValueById(counter, id) {
         return null;
     }
 }
+
+export async function createCounterValue(counter, value) {
+    const response = await fetch(
+        `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/api/v1/counters/${counter.id}/values`,
+        {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + await getToken()
+            },
+            body: JSON.stringify({
+                value
+            }),
+        });
+
+    if (!response.ok){
+        //ToDo обработка ошибок регистрации
+        //throw new Error( await response.json);
+    }
+}
