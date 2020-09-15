@@ -30,14 +30,15 @@ async function signInReq(email, password) {
           }),
       });
 
-      console.log(response.body)   
+      console.log(response)   
   if (response.ok){
       const json = await response.json();
       //await setToken(json.accessToken);
       console.log(json)
       return json
-  }
-  else return null
+  } 
+  else if (response.status==401)   {console.log("error pass"); 
+  return null}
 }
  async function signUpReq(email, password, name, phoneNumber) {
   const response = await fetch(
@@ -171,14 +172,19 @@ const  handleEnter = async(event) =>
       setRequiredEmpty(false)
       if ( !regExpEmail.test(emailValue)){setIsWrongEmail(true)
         // console.log("email wrong")
-          setIsWrongPassword(true)
+          
         }else{
         //  console.log("email ok")
           setIsWrongEmail(false)
           await signIn(emailValue, passwordValue);
           // //this.setState({signedIn: true});
            const token=await signInReq(emailValue, passwordValue);
-           props.signIn(emailValue,token);
+           if (token) {
+             props.signIn(emailValue,token);
+             setIsWrongPassword(false)
+            }else {
+             setIsWrongPassword(true)
+           }
          
         } 
     }
