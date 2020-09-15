@@ -16,7 +16,6 @@ async function signIn(email, password) {
   const response = await fetch(
       `http://localhost:3000/auth/sign_in`, {
           method: 'POST',
-          mode: 'no-cors',
           headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/json',
@@ -39,7 +38,6 @@ export async function signUp(email, password, name, phoneNumber) {
   const response = await fetch(
       `http://localhost:3000/auth/sign_up`, {
           method: 'POST',
-          mode: 'no-cors',
           headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/json'
@@ -198,7 +196,7 @@ const  handleEnter = async(event) =>
       //    console.log("pwd no")
         } else {setIsPasswordsEqual(true)
       //    console.log("pwd ok")
-          await signUp(emailValue, passwordValue,'name', '0000');
+          await signUp(emailValue, passwordValue,'name', '+7(965)342-76-53');
           // //this.setState({signedIn: true});
            console.log("signed up")
         }

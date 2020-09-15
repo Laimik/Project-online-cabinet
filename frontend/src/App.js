@@ -8,6 +8,7 @@ import {BrowserRouter, Route } from 'react-router-dom'
 import  Pokazania from './Components/Pokazania'
 import {LoginForm} from './Components/auth/loginForm/loginForm'
 
+import {Provider} from 'react-redux'
 function App() {
   return (
     <div>
