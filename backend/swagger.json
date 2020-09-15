@@ -772,6 +772,7 @@
         }
       }
     },
+
     "/api/v1/profile": {
       "get": {
         "tags": [

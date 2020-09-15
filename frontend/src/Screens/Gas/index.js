@@ -1,6 +1,4 @@
 import React, {Component} from "react";
-import {Redirect} from "react-router";
-import SignIn from "../SignIn";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
@@ -15,16 +13,16 @@ import TableBody from "@material-ui/core/TableBody";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import Layout from "../Layout";
-import {getProfile} from "../../Services/profileService";
 import {getAddresses} from "../../Services/addressService";
-import {getCounters} from "../../Services/counterService";
+import {getCounters, sendCounterValues} from "../../Services/counterService";
 import {getCounterTypes} from "../../Services/counterTypeService";
 import {createCounterValue, getCounterValues} from "../../Services/counterValueService";
 import authGuard from "../../Components/AuthGuard";
 import MenuItem from "@material-ui/core/MenuItem";
 import Container from "@material-ui/core/Container";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import {getCurrentRates, getRate, getRateById} from "../../Services/rateService";
+import {getCurrentRates, getRate} from "../../Services/rateService";
+import style from "./style.css"
 
 
 const StyledTableCell = withStyles((theme) => ({
@@ -45,14 +43,6 @@ const StyledTableRow = withStyles((theme) => ({
     },
 }))(TableRow);
 
-function createData(address, date, value, pay) {
-    return { address, date, value, pay };
-}
-
-const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-];
-
 class Gas extends Component {
     constructor(props) {
         super(props)
@@ -60,11 +50,12 @@ class Gas extends Component {
             loading: true,
             address: undefined,
             addresses: [],
-            counter: [],
+            counters: [],
             counterType: [],
-            counterValue: [],
+            counterValues: [],
             rate: [],
-            currentRate: []
+            currentRate: [],
+            currentValues: []
         }
     }
 
@@ -77,26 +68,34 @@ class Gas extends Component {
                     const gasCounterType = this.state.counterTypes
                         .find(counterType => counterType.name === 'Газ');
 
-                    const gasCounter = counters
-                        .find(counter => counter.counter_type_id === gasCounterType.id
-                            && counter.address_id === address.id);
-                    // console.log(gasCounter);
+                    const gasCounters = counters
+                        .filter(counter => counter.counter_type_id === gasCounterType.id
+                            && counter.address_id === address.id) || [];
 
-                    if (gasCounter) {
-                        const counterValues = await getCounterValues(gasCounter);
-
-                        this.setState({
-                            counterValues: counterValues,
-                            counter: gasCounter,
-                            address: address
-                        })
-                    } else {
-                        this.setState({
-                            counterValues: [],
-                            counter: undefined,
-                            address: address
-                        })
+                    const allCounterValues = [];
+                    const currentValues = [];
+                    for (const gasCounter of gasCounters) {
+                        const counterValues = await getCounterValues(gasCounter)
+                        allCounterValues.push(...counterValues);
+                        const counterCurrentValue = allCounterValues
+                            .find(counterValue => counterValue.current &&
+                                counterValue.counter_id === gasCounter.id);
+                        if (!counterCurrentValue) {
+                            currentValues.push({
+                                counter_id: gasCounter.id,
+                                value: 0
+                            })
+                        } else {
+                            currentValues.push({...counterCurrentValue});
+                        }
                     }
+
+                    this.setState({
+                        counterValues: allCounterValues,
+                        counters: gasCounters,
+                        address: address,
+                        currentValues: currentValues
+                    })
                 }
             }
         }
@@ -118,48 +117,81 @@ class Gas extends Component {
         const gasRate = rate
             .find(rate => rate.counter_type_id === gasCounterType.id);
 
-        const gasCounter = counters
-            .find(counter => counter.counter_type_id === gasCounterType.id
+        const gasCounters = counters
+            .filter(counter => counter.counter_type_id === gasCounterType.id
                 && counter.address_id === address.id);
         // console.log(gasCounter);
 
         const gasCurrentRates = currentRates
             .find(currentRate => currentRate.counter_type_id === gasCounterType.id);
         console.log(gasCurrentRates);
-        console.log(gasCounter);
 
-        if (gasCounter) {
-            const counterValues = await getCounterValues(gasCounter);
-
-            this.setState({
-                loading: false,
-                addresses: addresses,
-                address: address,
-                counter: gasCounter,
-                counterTypes: counterTypes,
-                counterValues: counterValues,
-                rate: gasRate,
-                currentRate: gasCurrentRates
-            })
-        } else {
-            this.setState({
-                loading: false,
-                addresses: addresses,
-                address: address,
-                counter: undefined,
-                counterTypes: counterTypes,
-                counterValues: [],
-                rate: gasRate,
-                currentRate: gasCurrentRates
-            })
+        const allCounterValues = [];
+        const currentValues = [];
+        for (const gasCounter of gasCounters) {
+            const counterValues = await getCounterValues(gasCounter)
+            allCounterValues.push(...counterValues);
+            const counterCurrentValue = allCounterValues
+                .find(counterValue => counterValue.current &&
+                    counterValue.counter_id === gasCounter.id);
+            if (!counterCurrentValue) {
+                currentValues.push({
+                    counter_id: gasCounter.id,
+                    value: 0
+                })
+            } else {
+                currentValues.push({...counterCurrentValue});
+            }
         }
+
+        this.setState({
+            loading: false,
+            addresses: addresses,
+            address: address,
+            counters: gasCounters,
+            counterTypes: counterTypes,
+            counterValues: allCounterValues,
+            rate: gasRate,
+            currentRate: gasCurrentRates,
+            currentValues: currentValues
+        })
     }
 
     submit = async () => {
-        console.log(this.state.counter);
-        await createCounterValue(this.state.counter, this.state.value);
-        //window.location.reload(false);
+        await sendCounterValues(this.state.currentValues);
+        window.location.reload(false);
     };
+
+    renderCounters() {
+        return(<>
+            {this.state.counters.map((counter, index) => {
+                const counterValues = this.state.counterValues.filter(counterValue => counterValue.counter_id === counter.id);
+                const currentCounterValue = this.state.currentValues.find(counterValue => counterValue.counter_id === counter.id);
+
+                return(<div key={counter.id}>
+                    <span className={"value"}>Номер счетчика  {counter.name}</span>
+                    <TextField
+                        className={"textField"}
+                        label="Показание"
+                        id="outlined-size-small"
+                        variant="outlined"
+                        size="small"
+                        value={currentCounterValue.value}
+                        onChange={(e) => {
+                            const currentValuesCopy = [...this.state.currentValues];
+                            for (const currentValue of currentValuesCopy) {
+                                if (currentValue.counter_id === counter.id) {
+                                    currentValue.value = Number(e.target.value);
+                                    break;
+                                }
+                            }
+                            this.setState({currentValues: currentValuesCopy});
+                        }}
+                    />
+                </div>);
+            })}
+        </>)
+    }
 
     render() {
         if (this.state.loading) {
@@ -176,6 +208,7 @@ class Gas extends Component {
                             <InputLabel htmlFor="outlined-age-native-simple">Адрес</InputLabel>
                             <Select
                                 label="Адрес"
+                                fullWidth={true}
                                 value={this.state.address.id}
                                 onChange={event => this.handleChange(event)}
                             >
@@ -184,41 +217,11 @@ class Gas extends Component {
                                 })}
                             </Select>
                         </FormControl>
-                        <p>Стоимость: {this.state.currentRate.rate}</p>
-                        <div>
-                            <TextField
-                                label="Показание"
-                                id="outlined-size-small"
-                                variant="outlined"
-                                size="small"
-                                onChange={(e) => {
-                                    this.setState({value: e.target.value})
-                                }}
-                            />
-                        </div>
+                        <p className={"rate"}>Стоимость: {this.state.currentRate.rate}</p>
+                        {this.renderCounters()}
                         <Button variant="contained" color="primary" type={"submit"}>
-                            Добавить показания
+                            Сохранить показания
                         </Button>
-                        <TableContainer component={Paper}>
-                            <Table aria-label="customized table">
-                                <TableHead>
-                                    <TableRow>
-                                        <StyledTableCell align="right">Дата</StyledTableCell>
-                                        <StyledTableCell align="right">Показание</StyledTableCell>
-                                        <StyledTableCell align="right">Оплачено</StyledTableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {rows.map((row) => (
-                                        <StyledTableRow key={row.address}>
-                                            <StyledTableCell align="right">{row.date}</StyledTableCell>
-                                            <StyledTableCell align="right">{row.value}</StyledTableCell>
-                                            <StyledTableCell align="right">{row.pay}</StyledTableCell>
-                                        </StyledTableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
                     </form>
                 </Layout>
             )

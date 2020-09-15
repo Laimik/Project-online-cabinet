@@ -1,0 +1,12 @@
+.rate{
+    font-size: x-large;
+}
+
+.value {
+    display: flex;
+    padding: 0 0 10px 0;
+}
+
+button{
+    margin: 20px 0 0 0 !important;
+}
