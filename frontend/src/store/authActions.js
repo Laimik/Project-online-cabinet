@@ -1,6 +1,7 @@
 import {createActions} from "redux-actions"
 
-export const {loginUser,registerNewUser }=createActions({
-    LOGIN_USER: (email,password) => ({email, password}),
-    REGISTER_NEW_USER: (email,password) => ({email, password}),
+export const {signIn, signUp, logOut }=createActions({
+    SIGN_IN: (email,token) => ({email, token}),
+    SIGN_UP: (email) => ({email}),
+    LOG_OUT:()=>{},
 })

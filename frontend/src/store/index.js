@@ -1,5 +1,6 @@
-import {createStore} from 'redux';
-const reducer =() => {}
+import {createStore, combineReducers} from 'redux';
+import authReducer from './authReducer'
+const reducer = combineReducers({auth: authReducer}) ;
 export function initStore(preloadedState=undefined){
-    return createStore({}, preloadedState)
+    return createStore(reducer, preloadedState)
 }

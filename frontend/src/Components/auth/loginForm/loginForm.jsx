@@ -12,7 +12,10 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Alert from '@material-ui/lab/Alert';
 
-async function signIn(email, password) {
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {signIn,signUp,logOut}from '../../../store/authActions'
+async function signInReq(email, password) {
   const response = await fetch(
       `http://localhost:3000/auth/sign_in`, {
           method: 'POST',
@@ -32,9 +35,11 @@ async function signIn(email, password) {
       const json = await response.json();
       //await setToken(json.accessToken);
       console.log(json)
+      return json
   }
+  else return null
 }
-export async function signUp(email, password, name, phoneNumber) {
+ async function signUpReq(email, password, name, phoneNumber) {
   const response = await fetch(
       `http://localhost:3000/auth/sign_up`, {
           method: 'POST',
@@ -121,7 +126,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export  function LoginForm() {
+ function LoginForm(props) {
   const classes = useStyles();
   const [value,setValue] = React.useState(0);
   const [emailValue, setEmailValue] = React.useState('');
@@ -132,6 +137,7 @@ export  function LoginForm() {
   const [isWrongPassword,setIsWrongPassword]=React.useState(false);
   const [isPasswordEqual,setIsPasswordsEqual]=React.useState(true);
   const [isWrongEmail,setIsWrongEmail]=React.useState(false);
+  //console.log(props)
   const handleChange = (event, newValue) => {
     setValue(newValue);
     //console.log(newValue)
@@ -154,10 +160,7 @@ export  function LoginForm() {
 //     this.setState({ value: event.target.value });
 
 // }
-const login = async () => {
-  await signIn(this.state.email, this.state.password);
-  this.setState({signedIn: true});
-};  
+ 
 const  handleEnter = async(event) =>
   {
     event.preventDefault();
@@ -174,7 +177,8 @@ const  handleEnter = async(event) =>
           setIsWrongEmail(false)
           await signIn(emailValue, passwordValue);
           // //this.setState({signedIn: true});
-           console.log("signed")
+           const token=await signInReq(emailValue, passwordValue);
+           props.signIn(emailValue,token);
          
         } 
     }
@@ -196,7 +200,7 @@ const  handleEnter = async(event) =>
       //    console.log("pwd no")
         } else {setIsPasswordsEqual(true)
       //    console.log("pwd ok")
-          await signUp(emailValue, passwordValue,'name', '+7(965)342-76-53');
+          await signUpReq(emailValue, passwordValue,'name', '+7(965)342-76-53');
           // //this.setState({signedIn: true});
            console.log("signed up")
         }
@@ -294,3 +298,13 @@ const  handleEnter = async(event) =>
     </div>
   );
 }
+const mapStateToProps=(store)=>{
+  console.log(store)
+  return {
+    accessToken: store.accessToken,
+    email: store.email
+  }
+}
+const mapDispatchToProps=(dispatch)=>bindActionCreators({signIn,signUp},dispatch)
+
+export default connect(mapStateToProps,mapDispatchToProps)(LoginForm)
