@@ -1,8 +1,8 @@
 import {getToken} from "./authService";
 
-export async function getCounters() {
+export async function getCounterValues(counter) {
     const response = await fetch(
-        `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/api/v1/counters`, {
+        `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/api/v1/counters/${counter.id}/values`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -13,13 +13,13 @@ export async function getCounters() {
     if (response.ok){
         return await response.json();
     } else {
-        return null;
+        return [];
     }
 }
 
-export async function getCounterById(id) {
+export async function getCounterValueById(counter, id) {
     const response = await fetch(
-        `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/api/v1/counters/${id}`,
+        `http://${process.env.EACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/api/v1/${counter.id}/value/${id}`,
         {
             method: 'GET',
             headers: {
@@ -35,29 +35,9 @@ export async function getCounterById(id) {
     }
 }
 
-export async function updateCounter(counter) {
+export async function createCounterValue(counter, value) {
     const response = await fetch(
-        `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/api/v1/addresses/${counter.id}`,
-        {
-            method: 'PUT',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + await getToken()
-            },
-            body: JSON.stringify({
-                name: counter.name,
-            }),
-        });
-    if (!response.ok){
-        //ToDo обработка ошибок обновления
-        //throw new Error( await response.json);
-    }
-}
-
-export async function sendCounterValues(values) {
-    const response = await fetch(
-        `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/api/v1/counters/batch_values`,
+        `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/api/v1/counters/${counter.id}/values`,
         {
             method: 'POST',
             headers: {
@@ -66,7 +46,7 @@ export async function sendCounterValues(values) {
                 'Authorization': 'Bearer ' + await getToken()
             },
             body: JSON.stringify({
-                values
+                value
             }),
         });
 
