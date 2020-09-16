@@ -14,6 +14,7 @@ import Alert from '@material-ui/lab/Alert';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+
 import { signIn, signUp, logOut } from '../../../store/authActions'
 async function signInReq(email, password) {
   const response = await fetch(
@@ -29,16 +30,11 @@ async function signInReq(email, password) {
       password,
     }),
   });
-
- //console.log(response)
   if (response.ok) {
     const json = await response.json();
-    //await setToken(json.accessToken);
-    //console.log(json)
     return json
   }
   else if (response.status == 401) {
-   // console.log("error pass");
     return null
   }
 }
@@ -62,7 +58,7 @@ async function signUpReq(email, password, name, phoneNumber) {
   } else if (response.status==302){ 
     return "dublicate"
   } else {
-    return "error"
+    alert ("При регистрации возникла ошибка")
   }
 }
 function TabPanel(props) {
@@ -132,6 +128,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function LoginForm(props) {
+  //component state
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const [emailValue, setEmailValue] = React.useState('');
@@ -148,58 +145,42 @@ function LoginForm(props) {
   const [isWrongPhone, setIsWrongPhone] = React.useState(false);
   const [isUserExist, setIsUserExist] = React.useState(false);
   const [isRegistred, setIsRegistred] = React.useState(false);
-  //console.log(props)
+  
+  
   const handleChange = (event, newValue) => {
     setValue(newValue);
-    //console.log(newValue)
   };
   const regExpEmail = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+$/;
   const regExpName = /^[a-zA-Zа-яА-я\s]+$/;
   const regExpPhone = /\+7\(\d{3}\)\d{3}-\d{2}-\d{2}/;;
   const handleChangeEmail = (event) => {
     setEmailValue(event.target.value);
-    //console.log(event.target.value)
   };
   const handleChangePassword = (event) => {
     setPasswordValue(event.target.value);
-    //console.log(event.target.value)
   };
   const handleChangePasswordDouble = (event) => {
     setPasswordDoubleValue(event.target.value);
-
-    //console.log(event.target.value)
   };
   const handleChangeName = (event) => {
     setNameValue(event.target.value);
-
-    //console.log(event.target.value)
   };
   const handleChangePhone = (event) => {
     setPhoneValue(event.target.value);
-
-    //console.log(event.target.value)
   };
-  //   const handleChange = (event) => {
-  //     this.setState({ value: event.target.value });
-
-  // }
-
+  
   const handleEnter = async (event) => {
     event.preventDefault();
-    //console.log("enter " + value + emailValue)
     if (!emailValue || !passwordValue) {
       setRequiredEmpty(true)
     } else {
       setRequiredEmpty(false)
       if (!regExpEmail.test(emailValue)) {
         setIsWrongEmail(true)
-        // console.log("email wrong")
 
       } else {
-        //  console.log("email ok")
         setIsWrongEmail(false)
         await signIn(emailValue, passwordValue);
-        // //this.setState({signedIn: true});
         const token = await signInReq(emailValue, passwordValue);
         if (token) {
           props.signIn(emailValue, token);
@@ -207,7 +188,6 @@ function LoginForm(props) {
         } else {
           setIsWrongPassword(true)
         }
-
       }
     }
 
@@ -218,14 +198,11 @@ function LoginForm(props) {
     event.preventDefault();
     if (!emailValue || !passwordValue || !passwordDoubleValue || !nameValue || !phoneValue) {
       setRequiredEmpty(true);
-      //  console.log("full") 
     } else {
       setRequiredEmpty(false)
       if (!regExpEmail.test(emailValue)) {
         setIsWrongEmail(true)
-        // console.log("email wrong")
       } else {
-        //  console.log("email ok")
         setIsWrongEmail(false)
         if (!regExpName.test(nameValue)) {
           setIsWrongName(true)
@@ -237,13 +214,9 @@ function LoginForm(props) {
             setIsWrongPhone(false);
             if (passwordValue !== passwordDoubleValue) {
               setIsPasswordsEqual(false)
-              //    console.log("pwd no")
             } else {
               setIsPasswordsEqual(true)
-              //    console.log("pwd ok")
               const result = await signUpReq(emailValue, passwordValue, nameValue, phoneValue);
-              // //this.setState({signedIn: true});
-              //console.log("signed up")
               if (result=="registred") {
                 setIsRegistred(true);
                 props.signUp(emailValue)
@@ -255,8 +228,6 @@ function LoginForm(props) {
         }
       }
     }
-
-
   };
 
   return (
@@ -270,7 +241,6 @@ function LoginForm(props) {
       <TabPanel value={value} index={0} className={classes.authTabs}>
         <form className={classes.authForm} onSubmit={handleEnter}>
           <TextField
-
             id="auth-email"
             label="Электронная почта"
             variant="outlined"
@@ -308,7 +278,6 @@ function LoginForm(props) {
       <TabPanel value={value} index={1}>
         <form className={classes.authForm} onSubmit={handleRegistration}>
           <TextField
-
             id="reg-email"
             label="Электронная почта"
             variant="outlined"
@@ -316,7 +285,6 @@ function LoginForm(props) {
             value={emailValue}
           />
           <TextField
-
             id="reg-name"
             label="Имя"
             variant="outlined"
@@ -324,7 +292,6 @@ function LoginForm(props) {
             value={nameValue}
           />
           <TextField
-
             id="reg-phone"
             label="Телефон"
             variant="outlined"
@@ -368,7 +335,6 @@ function LoginForm(props) {
   );
 }
 const mapStateToProps = (store) => {
-  console.log(store)
   return {
     accessToken: store.accessToken,
     email: store.email
