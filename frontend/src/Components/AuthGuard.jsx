@@ -6,10 +6,13 @@ import Container from "@material-ui/core/Container";
 
 export default function authGuard(WrappedComponent) {
     return class extends React.Component {
-        state = {
-            loading: true,
-            isAuthenticated: undefined
-        };
+        constructor(props) {
+            super(props)
+            this.state = {
+                loading: true,
+                isAuthenticated: undefined
+            }
+        }
 
         async componentDidMount() {
             this.setState ({

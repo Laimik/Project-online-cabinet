@@ -28,10 +28,13 @@ function App() {
             <Route path='/pokazania' component={Pokazania} />
             <Route path='/profile' component={Profile}/>
             <Route path='/gas' render={(props) => (
-                <Values {...props} type={'Газ'} />
+                <Values {...props} types={['Газ']} />
             )}/>
             <Route path='/electricity' render={(props) => (
-                <Values {...props} type={'Электричество'} />
+                <Values {...props} types={['Электричество']} />
+            )}/>
+            <Route path='/water' render={(props) => (
+                <Values {...props} types={['Холодная вода', 'Горячая вода']} />
             )}/>
         </BrowserRouter>
     );

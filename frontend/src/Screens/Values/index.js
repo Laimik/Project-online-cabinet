@@ -15,20 +15,18 @@ import Container from "@material-ui/core/Container";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {getCurrentRates, getRate} from "../../Services/rateService";
 import style from "./style.css"
+import Typography from "@material-ui/core/Typography";
 
 class Values extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            type: props.type,
             loading: true,
             address: undefined,
             addresses: [],
             counters: [],
-            counterType: [],
-            counterValues: [],
-            rate: [],
-            currentRate: [],
+            counterTypes: [],
+            rates: [],
             currentValues: []
         }
     }
@@ -37,73 +35,29 @@ class Values extends Component {
         const selectedId = event.target.value;
         for (const address of this.state.addresses) {
             if (selectedId === address.id) {
-                const allCounters = await getCounters();
-                if (allCounters) {
-                    const counterType = this.state.counterTypes
-                        .find(counterType => counterType.name === this.state.type);
-
-                    const counters = allCounters
-                        .filter(counter => counter.counter_type_id === counterType.id
-                            && counter.address_id === address.id) || [];
-
-                    const allCounterValues = [];
-                    const currentValues = [];
-                    for (const counter of counters) {
-                        const counterValues = await getCounterValues(counter)
-                        allCounterValues.push(...counterValues);
-                        const counterCurrentValue = allCounterValues
-                            .find(counterValue => counterValue.current &&
-                                counterValue.counter_id === counter.id);
-                        if (!counterCurrentValue) {
-                            currentValues.push({
-                                counter_id: counter.id,
-                                value: undefined
-                            })
-                        } else {
-                            currentValues.push({...counterCurrentValue});
-                        }
-                    }
-
-                    this.setState({
-                        counterValues: allCounterValues,
-                        counters: counters,
-                        address: address,
-                        currentValues: currentValues
-                    })
-                }
+                this.setState({
+                    address: address,
+                })
             }
         }
     }
 
+    getCounterTypeForType = (type) => {
+        return this.state.counterTypes
+            .find(counterType => counterType.name === type);
+    }
+
     async componentDidMount() {
         const addresses = await getAddresses();
-        const allCounters = await getCounters();
+        const counters = await getCounters();
         const counterTypes = await getCounterTypes();
-        const rates = await getRate();
-        const allCurrentRates = await getCurrentRates();
+        const rates = await getCurrentRates();
 
         const address = addresses[0];
-
-        const counterType = counterTypes
-            .find(counterType => counterType.name === this.state.type);
-
-        const rate = rates
-            .find(rate => rate.counter_type_id === counterType.id);
-
-        const counters = allCounters
-            .filter(counter => counter.counter_type_id === counterType.id
-                && counter.address_id === address.id);
-
-        const currentRates = allCurrentRates
-            .find(currentRate => currentRate.counter_type_id === counterType.id);
-        console.log(currentRates);
-
-        const allCounterValues = [];
         const currentValues = [];
         for (const counter of counters) {
             const counterValues = await getCounterValues(counter)
-            allCounterValues.push(...counterValues);
-            const counterCurrentValue = allCounterValues
+            const counterCurrentValue = counterValues
                 .find(counterValue => counterValue.current &&
                     counterValue.counter_id === counter.id);
             if (!counterCurrentValue) {
@@ -122,11 +76,9 @@ class Values extends Component {
             address: address,
             counters: counters,
             counterTypes: counterTypes,
-            counterValues: allCounterValues,
-            rate: rate,
-            currentRate: currentRates,
+            rates: rates,
             currentValues: currentValues
-        })
+        });
     }
 
     submit = async () => {
@@ -134,13 +86,25 @@ class Values extends Component {
         window.location.reload(false);
     };
 
-    renderCounters() {
+    renderRateForType(type) {
+        const counterType = this.getCounterTypeForType(type);
+        const currentRate = this.state.rates
+            .find(currentRate => currentRate.counter_type_id === counterType.id);
+        return  currentRate ? currentRate.rate : 'Тариф не задан'
+    }
+
+    renderCountersForType(type) {
+        const counterType = this.getCounterTypeForType(type);
+        const counters = this.state.counters
+            .filter(counter => counter.counter_type_id === counterType.id &&
+                counter.address_id === this.state.address.id);
+
         return(<>
-            {this.state.counters.map((counter, index) => {
+            {counters.map((counter) => {
                 const currentCounterValue = this.state.currentValues.find(counterValue => counterValue.counter_id === counter.id);
 
                 return(<div className={"TextField"} key={counter.id}>
-                    <span className={"value"}>Номер счетчика  {counter.name}</span>
+                    <Typography variant="body1" component="p">Номер счетчика  {counter.name}</Typography>
                     <TextField
                         label="Показание"
                         id="outlined-size-small"
@@ -173,16 +137,17 @@ class Values extends Component {
             </Container>;
         } else {
             return (
-                <Layout label={this.state.type}>
+                <Layout label={this.props.types.join(' / ')}>
                     <form onSubmit={async (e) => {
                         e.preventDefault();
-                        await this.submit();}}>
+                        await this.submit();
+                    }}>
                         <FormControl variant="outlined">
                             <InputLabel htmlFor="outlined-age-native-simple">Адрес</InputLabel>
                             <Select
                                 className={"addressSelect"}
                                 label="Адрес"
-                                fullWidth={true}
+                                // fullWidth={true}
                                 value={this.state.address.id}
                                 onChange={event => this.handleChange(event)}
                             >
@@ -191,8 +156,13 @@ class Values extends Component {
                                 })}
                             </Select>
                         </FormControl>
-                        <p className={"rate"}>Стоимость: {this.state.currentRate ? this.state.currentRate.rate : 'Тариф не задан'}</p>
-                        {this.renderCounters()}
+                        {this.props.types.map((type, index) => {
+                            return(<div key={index}>
+                                <Typography variant="subtitle1" component="p">{type}</Typography>
+                                <Typography variant="caption" component="p">Стоимость: {this.renderRateForType(type)}</Typography>
+                                {this.renderCountersForType(type)}
+                            </div>);
+                        })}
                         <Button variant="contained" color="primary" type={"submit"}>
                             Сохранить показания
                         </Button>
