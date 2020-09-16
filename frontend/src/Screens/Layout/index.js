@@ -201,7 +201,7 @@ export default function Layout(props) {
                                 </ListItemIcon>
                                 <ListItemText primary={'Газ'} />
                             </ListItem>
-                            <ListItem button>
+                            <ListItem button component="a" href={'/electricity'} key={'Электричество'}>
                                 <ListItemIcon>
                                     <FlashOn />
                                 </ListItemIcon>
