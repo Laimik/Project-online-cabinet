@@ -3,7 +3,7 @@ module.exports = {
         const pool = await require("../database/database").getConnectionPool();
         const connection = await pool.getConnection();
         try {
-            const [rows] = await pool.execute(
+            const [rows] = await connection.execute(
                 'SELECT * FROM counter_types',
                 []
             );
@@ -17,7 +17,7 @@ module.exports = {
         const pool = await require("../database/database").getConnectionPool();
         const connection = await pool.getConnection();
         try {
-            const [rows] = await pool.execute(
+            const [rows] = await connection.execute(
                 'SELECT * FROM counter_types WHERE id = ?',
                 [counterTypeId]
             );

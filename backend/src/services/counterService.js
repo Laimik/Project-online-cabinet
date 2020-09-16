@@ -3,7 +3,7 @@ module.exports = {
         const pool = await require("../database/database").getConnectionPool();
         const connection = await pool.getConnection();
         try {
-            const [rows] = await pool.execute(
+            const [rows] = await connection.execute(
                 'SELECT * FROM counters WHERE user_id = ?',
                 [userId]
             );
@@ -18,7 +18,7 @@ module.exports = {
         const pool = await require("../database/database").getConnectionPool();
         const connection = await pool.getConnection();
         try {
-            const [rows] = await pool.execute(
+            const [rows] = await connection.execute(
                 'SELECT * FROM counters WHERE user_id = ? AND id = ?',
                 [userId, counterId]
             );
@@ -37,12 +37,12 @@ module.exports = {
         const pool = await require("../database/database").getConnectionPool();
         const connection = await pool.getConnection();
         try {
-            await pool.query(
+            await connection.query(
                 "INSERT INTO counters (name, user_id, address_id, counter_type_id)" +
                 " VALUES (?,?,?,?)",
                 [name, userId, addressId, counterTypeId]);
 
-            const [rows] = await pool.query("SELECT LAST_INSERT_ID() AS newId");
+            const [rows] = await connection.query("SELECT LAST_INSERT_ID() AS newId");
             const id = rows[0].newId;
 
             return await module.exports.getCounterById(userId, id);
@@ -55,11 +55,11 @@ module.exports = {
         const pool = await require("../database/database").getConnectionPool();
         const connection = await pool.getConnection();
         try {
-            await pool.query(
+            await connection.query(
                 "UPDATE counters SET name = ? WHERE id = ?",
                 [counter.name, counter.id, counter.userId]);
 
-            const [rows] = await pool.execute(
+            const [rows] = await connection.execute(
                 'SELECT * FROM counters WHERE id = ?',
                 [counter.id]
             );
@@ -74,7 +74,7 @@ module.exports = {
         const pool = await require("../database/database").getConnectionPool();
         const connection = await pool.getConnection();
         try {
-            await pool.query(
+            await connection.query(
                 "DELETE FROM counters WHERE id = ? AND user_id = ?",
                 [counterId, userId]
             );

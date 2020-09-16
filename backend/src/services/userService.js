@@ -3,7 +3,7 @@ module.exports = {
         const pool = await require("../database/database").getConnectionPool();
         const connection = await pool.getConnection();
         try {
-            const [rows] = await pool.execute(
+            const [rows] = await connection.execute(
                 'SELECT * FROM users WHERE email = ?',
                 [email]
             );
@@ -21,7 +21,7 @@ module.exports = {
         const pool = await require("../database/database").getConnectionPool();
         const connection = await pool.getConnection();
         try {
-            await pool.query(
+            await connection.query(
                 "INSERT INTO users (name, email, password, phone_number) VALUES (?,?,?,?)",
                 [name, email, passwordHash, number]);
         } finally {
@@ -33,7 +33,7 @@ module.exports = {
         const pool = await require("../database/database").getConnectionPool();
         const connection = await pool.getConnection();
         try {
-            const [rows] = await pool.execute(
+            const [rows] = await connection.execute(
                 'SELECT * FROM users WHERE id = ?',
                 [id]
             );
@@ -51,12 +51,12 @@ module.exports = {
         const pool = await require("../database/database").getConnectionPool();
         const connection = await pool.getConnection();
         try {
-            await pool.query(
+            await connection.query(
                 "UPDATE users SET name = ?, email = ?, password = ?, phone_number = ? WHERE id = ?",
                 [user.name, user.email, user.password, user.phoneNumber, user.id]
             );
 
-            const [rows] = await pool.execute(
+            const [rows] = await connection.execute(
                 'SELECT * FROM users WHERE id = ?',
                 [user.id]
             );

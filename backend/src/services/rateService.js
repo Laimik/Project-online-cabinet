@@ -41,7 +41,7 @@ module.exports = {
                 console.log(query);
             }
 
-            const [rows] = await pool.execute(
+            const [rows] = await connection.execute(
                 query,
                 args
             );
@@ -55,7 +55,7 @@ module.exports = {
         const pool = await require("../database/database").getConnectionPool();
         const connection = await pool.getConnection();
         try {
-            const [rows] = await pool.execute(
+            const [rows] = await connection.execute(
                 'SELECT * FROM rate WHERE id = ?',
                 [rateId]
             );
@@ -73,12 +73,12 @@ module.exports = {
         const pool = await require("../database/database").getConnectionPool();
         const connection = await pool.getConnection();
         try {
-            await pool.query(
+            await connection.query(
                 "INSERT INTO rate (rate, counter_type_id, date_begin)" +
                 " VALUES (?,?,?)",
                 [rate, counterTypeId, dateBegin]);
 
-            const [rows] = await pool.query("SELECT LAST_INSERT_ID() AS newId");
+            const [rows] = await connection.query("SELECT LAST_INSERT_ID() AS newId");
             const id = rows[0].newId;
 
             return await module.exports.getRateById(id);
@@ -91,11 +91,11 @@ module.exports = {
         const pool = await require("../database/database").getConnectionPool();
         const connection = await pool.getConnection();
         try {
-            await pool.query(
+            await connection.query(
                 "UPDATE rate SET rate = ?, counter_type_id = ?, date_begin = ? WHERE id = ?",
                 [rate.rate, rate.counterTypeId, rate.dateBegin, rate.id]
             );
-            const [rows] = await pool.execute(
+            const [rows] = await connection.execute(
                 'SELECT * FROM rate WHERE id = ?',
                 [rate.id]
             );
@@ -110,7 +110,7 @@ module.exports = {
         const pool = await require("../database/database").getConnectionPool();
         const connection = await pool.getConnection();
         try {
-            await pool.query(
+            await connection.query(
                 "DELETE FROM counters WHERE id = ?",
                 [rateId]
             );

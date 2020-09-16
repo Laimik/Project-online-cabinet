@@ -5,7 +5,7 @@ require('dotenv').config();
 
 const getConnection = async () => {
     return mysql2.createPool({
-        connectionLimit: 5,
+        connectionLimit: 10,
         timezone: 'Z',
         port: process.env.DB_PORT,
         host: process.env.DB_HOST,
@@ -17,9 +17,14 @@ const getConnection = async () => {
 
 const migrate = async () => {
     const pool = await getConnection();
-    const [rows] = await pool.execute("SHOW TABLES LIKE 'version';");
-    if (rows.length === 0) {
-       await migrateToV1()
+    const connection = await pool.getConnection();
+    try {
+        const [rows] = await connection.execute("SHOW TABLES LIKE 'version';");
+        if (rows.length === 0) {
+            await migrateToV1()
+        }
+    } finally {
+        connection.release();
     }
 }
 
