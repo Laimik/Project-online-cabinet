@@ -1,9 +1,7 @@
 module.exports = {
     getUserByEmail: async (email) => {
-        const pool = await require("../database/database").getConnectionPool();
-        const connection = await pool.getConnection();
-        try {
-            const [rows] = await connection.execute(
+        const pool = await require("../database/database").connectionPool;
+        const [rows] = await pool.execute(
                 'SELECT * FROM users WHERE email = ?',
                 [email]
             );
@@ -12,28 +10,18 @@ module.exports = {
             } else {
                 return undefined;
             }
-        } finally {
-            connection.release();
-        }
-    },
+        },
 
     createUser: async (name, email, passwordHash, number) => {
-        const pool = await require("../database/database").getConnectionPool();
-        const connection = await pool.getConnection();
-        try {
-            await connection.query(
+        const pool = await require("../database/database").connectionPool;
+        await pool.query(
                 "INSERT INTO users (name, email, password, phone_number) VALUES (?,?,?,?)",
                 [name, email, passwordHash, number]);
-        } finally {
-            connection.release();
-        }
-    },
+        },
 
     getUserById: async (id) => {
-        const pool = await require("../database/database").getConnectionPool();
-        const connection = await pool.getConnection();
-        try {
-            const [rows] = await connection.execute(
+        const pool = await require("../database/database").connectionPool;
+       const [rows] = await pool.execute(
                 'SELECT * FROM users WHERE id = ?',
                 [id]
             );
@@ -42,28 +30,20 @@ module.exports = {
             } else {
                 return undefined;
             }
-        } finally {
-            connection.release();
-        }
-    },
+        },
 
     updateUser: async(user) => {
-        const pool = await require("../database/database").getConnectionPool();
-        const connection = await pool.getConnection();
-        try {
-            await connection.query(
+        const pool = await require("../database/database").connectionPool;
+        await pool.query(
                 "UPDATE users SET name = ?, email = ?, password = ?, phone_number = ? WHERE id = ?",
                 [user.name, user.email, user.password, user.phoneNumber, user.id]
             );
 
-            const [rows] = await connection.execute(
+            const [rows] = await pool.execute(
                 'SELECT * FROM users WHERE id = ?',
                 [user.id]
             );
 
             return rows[0];
-        } finally {
-            connection.release();
         }
-    }
 }

@@ -1,5 +1,5 @@
 const migrateToV1 = async () => {
-    const pool = await require("../database").getConnectionPool();
+    const pool = await require("../database").connectionPool;
     const connection = await pool.getConnection();
     try {
         await connection.execute("create table IF NOT EXISTS counter_types (id int auto_increment primary key, name nvarchar(128) not null);");
