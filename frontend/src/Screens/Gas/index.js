@@ -3,14 +3,9 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
-import TableContainer from "@material-ui/core/TableContainer";
-import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import withStyles from "@material-ui/core/styles/withStyles";
 import TableCell from "@material-ui/core/TableCell";
-import TableBody from "@material-ui/core/TableBody";
-import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import Layout from "../Layout";
 import {getAddresses} from "../../Services/addressService";
@@ -83,7 +78,7 @@ class Gas extends Component {
                         if (!counterCurrentValue) {
                             currentValues.push({
                                 counter_id: gasCounter.id,
-                                value: 0
+                                value: undefined
                             })
                         } else {
                             currentValues.push({...counterCurrentValue});
@@ -137,7 +132,7 @@ class Gas extends Component {
             if (!counterCurrentValue) {
                 currentValues.push({
                     counter_id: gasCounter.id,
-                    value: 0
+                    value: undefined
                 })
             } else {
                 currentValues.push({...counterCurrentValue});
@@ -168,20 +163,22 @@ class Gas extends Component {
                 const counterValues = this.state.counterValues.filter(counterValue => counterValue.counter_id === counter.id);
                 const currentCounterValue = this.state.currentValues.find(counterValue => counterValue.counter_id === counter.id);
 
-                return(<div key={counter.id}>
+                return(<div className={"TextField"} key={counter.id}>
                     <span className={"value"}>Номер счетчика  {counter.name}</span>
                     <TextField
-                        className={"textField"}
                         label="Показание"
                         id="outlined-size-small"
                         variant="outlined"
                         size="small"
-                        value={currentCounterValue.value}
+                        value={currentCounterValue.value || ''}
+                        type="number"
                         onChange={(e) => {
                             const currentValuesCopy = [...this.state.currentValues];
                             for (const currentValue of currentValuesCopy) {
                                 if (currentValue.counter_id === counter.id) {
                                     currentValue.value = Number(e.target.value);
+                                    if (Number.isNaN(currentValue.value))
+                                        currentValue.value = undefined;
                                     break;
                                 }
                             }
@@ -207,6 +204,7 @@ class Gas extends Component {
                         <FormControl variant="outlined">
                             <InputLabel htmlFor="outlined-age-native-simple">Адрес</InputLabel>
                             <Select
+                                className={"addressSelect"}
                                 label="Адрес"
                                 fullWidth={true}
                                 value={this.state.address.id}

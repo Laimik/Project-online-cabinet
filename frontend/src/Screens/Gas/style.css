@@ -10,3 +10,12 @@
 button{
     margin: 20px 0 0 0 !important;
 }
+form{
+    width: 100%;
+}
+.MuiFormControl-root {
+    width: 100%;
+}
+.TextField{
+    width: 50% !important;
+}
