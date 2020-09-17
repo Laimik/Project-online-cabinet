@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -12,13 +12,15 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Alert from '@material-ui/lab/Alert';
 
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
-import { signIn, signUp, logOut } from '../../../store/authActions'
+import {signIn, signUp} from '../../../store/authActions'
+import {Redirect} from "react-router";
+
 async function signInReq(email, password) {
   const response = await fetch(
-    `http://localhost:3000/auth/sign_in`, {
+    `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/auth/sign_in`, {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -31,16 +33,15 @@ async function signInReq(email, password) {
     }),
   });
   if (response.ok) {
-    const json = await response.json();
-    return json
+    return await response.json()
   }
-  else if (response.status == 401) {
+  else if (response.status === 401) {
     return null
   }
 }
 async function signUpReq(email, password, name, phoneNumber) {
   const response = await fetch(
-    `http://localhost:3000/auth/sign_up`, {
+    `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/auth/sign_up`, {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -55,7 +56,7 @@ async function signUpReq(email, password, name, phoneNumber) {
   });
   if (response.ok) {
     return "registred"
-  } else if (response.status==302){ 
+  } else if (response.status===302){
     return "dublicate"
   } else {
     alert ("При регистрации возникла ошибка")
@@ -145,14 +146,15 @@ function LoginForm(props) {
   const [isWrongPhone, setIsWrongPhone] = React.useState(false);
   const [isUserExist, setIsUserExist] = React.useState(false);
   const [isRegistred, setIsRegistred] = React.useState(false);
-  
-  
+
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
   const regExpEmail = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+$/;
   const regExpName = /^[a-zA-Zа-яА-я\s]+$/;
-  const regExpPhone = /\+7\(\d{3}\)\d{3}-\d{2}-\d{2}/;;
+  const regExpPhone = /\+7\(\d{3}\)\d{3}-\d{2}-\d{2}/;
+  ;
   const handleChangeEmail = (event) => {
     setEmailValue(event.target.value);
   };
@@ -168,7 +170,7 @@ function LoginForm(props) {
   const handleChangePhone = (event) => {
     setPhoneValue(event.target.value);
   };
-  
+
   const handleEnter = async (event) => {
     event.preventDefault();
     if (!emailValue || !passwordValue) {
@@ -217,10 +219,10 @@ function LoginForm(props) {
             } else {
               setIsPasswordsEqual(true)
               const result = await signUpReq(emailValue, passwordValue, nameValue, phoneValue);
-              if (result=="registred") {
+              if (result === "registred") {
                 setIsRegistred(true);
                 props.signUp(emailValue)
-              } else if (result == "dublicate") {
+              } else if (result === "dublicate") {
                 setIsUserExist(true);
               }
             }
@@ -229,110 +231,124 @@ function LoginForm(props) {
       }
     }
   };
+  if (props.accessToken) {
+    return <Redirect to={'/'}/>
+  } else {
+    return (
+        <div className={classes.authTabs}>
+          <AppBar position="static">
+            <Tabs value={value} onChange={handleChange} aria-label="auth and registration tabs"
+                  className={classes.authTabsHeader}>
+              <Tab label="Вход" {...a11yProps(0)} />
+              <Tab label="Регистрация" {...a11yProps(1)} />
+            </Tabs>
+          </AppBar>
+          <TabPanel value={value} index={0} className={classes.authTabs}>
+            <form className={classes.authForm} onSubmit={handleEnter}>
+              <TextField
+                  id="auth-email"
+                  label="Электронная почта"
+                  variant="outlined"
+                  onChange={handleChangeEmail}
+                  value={emailValue}
+                  required
+              />
+              <TextField
+                  id="auth-password"
+                  label="Пароль"
+                  type="password"
+                  autoComplete="current-password"
+                  variant="outlined"
+                  onChange={handleChangePassword}
+                  value={passwordValue}
+                  className={classBadInput}
+                  required
+              />
 
-  return (
-    <div className={classes.authTabs}>
-      <AppBar position="static"  >
-        <Tabs value={value} onChange={handleChange} aria-label="auth and registration tabs" className={classes.authTabsHeader}>
-          <Tab label="Вход" {...a11yProps(0)} />
-          <Tab label="Регистрация" {...a11yProps(1)} />
-        </Tabs>
-      </AppBar>
-      <TabPanel value={value} index={0} className={classes.authTabs}>
-        <form className={classes.authForm} onSubmit={handleEnter}>
-          <TextField
-            id="auth-email"
-            label="Электронная почта"
-            variant="outlined"
-            onChange={handleChangeEmail}
-            value={emailValue}
-            required
-          />
-          <TextField
-            id="auth-password"
-            label="Пароль"
-            type="password"
-            autoComplete="current-password"
-            variant="outlined"
-            onChange={handleChangePassword}
-            value={passwordValue}
-            className={classBadInput}
-            required
-          />
+              <FormControlLabel
+                  control={
+                    <Checkbox name="saveSession" color="primary"/>
+                  }
+                  label="Запомнить меня"
+              />
+              <Button variant="contained" color="primary" onClick={handleEnter} type="submit">
+                Войти
+              </Button>
+              {requiredEmpty &&
+              <Alert className={classes.authAlert} severity="error">Необходимо заполнить все поля</Alert>}
+              {(!requiredEmpty && isWrongEmail) &&
+              <Alert className={classes.authAlert} severity="error">Email не соответствует формату</Alert>}
+              {(!requiredEmpty && !isWrongEmail && isWrongPassword) &&
+              <Alert className={classes.authAlert} severity="error">Неверная пара логин и пароль</Alert>}
 
-          <FormControlLabel
-            control={
-              <Checkbox name="saveSession" color="primary" />
-            }
-            label="Запомнить меня"
-          />
-          <Button variant="contained" color="primary" onClick={handleEnter} type="submit">
-            Войти
-            </Button>
-          {requiredEmpty && <Alert className={classes.authAlert} severity="error">Необходимо заполнить все поля</Alert>}
-          {(!requiredEmpty && isWrongEmail) && <Alert className={classes.authAlert} severity="error">Email не соответствует формату</Alert>}
-          {(!requiredEmpty && !isWrongEmail && isWrongPassword) && <Alert className={classes.authAlert} severity="error">Неверная пара логин и пароль</Alert>}
-
-        </form>
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <form className={classes.authForm} onSubmit={handleRegistration}>
-          <TextField
-            id="reg-email"
-            label="Электронная почта"
-            variant="outlined"
-            onChange={handleChangeEmail}
-            value={emailValue}
-          />
-          <TextField
-            id="reg-name"
-            label="Имя"
-            variant="outlined"
-            onChange={handleChangeName}
-            value={nameValue}
-          />
-          <TextField
-            id="reg-phone"
-            label="Телефон"
-            variant="outlined"
-            onChange={handleChangePhone}
-            value={phoneValue}
-          />
-          <TextField
-            id="reg-password"
-            label="Пароль"
-            type="password"
-            autoComplete="current-password"
-            variant="outlined"
-            className={classBadInput}
-            onChange={handleChangePassword}
-            value={passwordValue}
-          />
-          <TextField
-            id="reg-password-repeat"
-            label="Повтор пароля"
-            type="password"
-            autoComplete="current-password"
-            variant="outlined"
-            className={classBadInput}
-            onChange={handleChangePasswordDouble}
-            value={passwordDoubleValue}
-          />
-          <Button variant="contained" color="primary" type="submit">
-            Регистрация
-            </Button>
-          {requiredEmpty && <Alert className={classes.authAlert} severity="error">Необходимо заполнить все поля</Alert>}
-          {(!requiredEmpty && isWrongEmail) && <Alert className={classes.authAlert} severity="error">Email не соответствует формату</Alert>}
-          {(!requiredEmpty && !isWrongEmail && isWrongName) && <Alert className={classes.authAlert} severity="error">Недопустимое имя</Alert>}
-          {(!requiredEmpty && !isWrongEmail && !isWrongName && isWrongPhone) && <Alert className={classes.authAlert} severity="error">Телефон должен соответствовать формату:+7(ХХХ)ХХХ-ХХ-ХХ</Alert>}
-          {(!requiredEmpty && !isWrongEmail && !isWrongName && !isWrongPhone && !isPasswordEqual) && <Alert className={classes.authAlert} severity="error">Пароли не совпадают</Alert>}
-          {(isUserExist) && <Alert className={classes.authAlert} severity="error">Такой пользователь уже зарегистрирован</Alert>}
-          {(isRegistred) && <Alert className={classes.authAlert} severity="success">Новый пользователь зарегистрирован</Alert>}
-        </form>
-      </TabPanel>
-
-    </div>
-  );
+            </form>
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            <form className={classes.authForm} onSubmit={handleRegistration}>
+              <TextField
+                  id="reg-email"
+                  label="Электронная почта"
+                  variant="outlined"
+                  onChange={handleChangeEmail}
+                  value={emailValue}
+              />
+              <TextField
+                  id="reg-name"
+                  label="Имя"
+                  variant="outlined"
+                  onChange={handleChangeName}
+                  value={nameValue}
+              />
+              <TextField
+                  id="reg-phone"
+                  label="Телефон"
+                  variant="outlined"
+                  onChange={handleChangePhone}
+                  value={phoneValue}
+              />
+              <TextField
+                  id="reg-password"
+                  label="Пароль"
+                  type="password"
+                  autoComplete="current-password"
+                  variant="outlined"
+                  className={classBadInput}
+                  onChange={handleChangePassword}
+                  value={passwordValue}
+              />
+              <TextField
+                  id="reg-password-repeat"
+                  label="Повтор пароля"
+                  type="password"
+                  autoComplete="current-password"
+                  variant="outlined"
+                  className={classBadInput}
+                  onChange={handleChangePasswordDouble}
+                  value={passwordDoubleValue}
+              />
+              <Button variant="contained" color="primary" type="submit">
+                Регистрация
+              </Button>
+              {requiredEmpty &&
+              <Alert className={classes.authAlert} severity="error">Необходимо заполнить все поля</Alert>}
+              {(!requiredEmpty && isWrongEmail) &&
+              <Alert className={classes.authAlert} severity="error">Email не соответствует формату</Alert>}
+              {(!requiredEmpty && !isWrongEmail && isWrongName) &&
+              <Alert className={classes.authAlert} severity="error">Недопустимое имя</Alert>}
+              {(!requiredEmpty && !isWrongEmail && !isWrongName && isWrongPhone) &&
+              <Alert className={classes.authAlert} severity="error">Телефон должен соответствовать
+                формату:+7(ХХХ)ХХХ-ХХ-ХХ</Alert>}
+              {(!requiredEmpty && !isWrongEmail && !isWrongName && !isWrongPhone && !isPasswordEqual) &&
+              <Alert className={classes.authAlert} severity="error">Пароли не совпадают</Alert>}
+              {(isUserExist) &&
+              <Alert className={classes.authAlert} severity="error">Такой пользователь уже зарегистрирован</Alert>}
+              {(isRegistred) &&
+              <Alert className={classes.authAlert} severity="success">Новый пользователь зарегистрирован</Alert>}
+            </form>
+          </TabPanel>
+        </div>
+    );
+  }
 }
 const mapStateToProps = (store) => {
   return {
