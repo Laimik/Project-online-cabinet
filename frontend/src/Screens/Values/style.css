@@ -1,0 +1,18 @@
+.rate{
+    font-size: x-large;
+}
+
+.value {
+    display: flex;
+    padding: 0 0 10px 0;
+}
+
+form{
+    width: 100%;
+}
+.MuiFormControl-root {
+    width: 100%;
+}
+.TextField{
+    width: 50% !important;
+}

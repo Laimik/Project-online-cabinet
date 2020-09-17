@@ -189,7 +189,7 @@ export default function Layout(props) {
                     </ListItem>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <List component="div" disablePadding>
-                            <ListItem button component="a" href={'/pokazania'} key={'Вода'}>
+                            <ListItem button component="a" href={'/water'} key={'Вода'}>
                                 <ListItemIcon>
                                     <InvertColors />
                                 </ListItemIcon>
@@ -201,7 +201,7 @@ export default function Layout(props) {
                                 </ListItemIcon>
                                 <ListItemText primary={'Газ'} />
                             </ListItem>
-                            <ListItem button>
+                            <ListItem button component="a" href={'/electricity'} key={'Электричество'}>
                                 <ListItemIcon>
                                     <FlashOn />
                                 </ListItemIcon>

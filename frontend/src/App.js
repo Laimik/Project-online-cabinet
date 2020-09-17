@@ -12,10 +12,9 @@ import LoginForm from './Components/auth/loginForm/loginForm'
 import SignIn from "./Screens/SignIn";
 import SignUp from "./Screens/SignUp";
 import Profile from "./Screens/Profile";
-import Gas from "./Screens/Gas";
 import moment from "moment";
 import localization from 'moment/locale/ru';
-import ScopedCssBaseline from "@material-ui/core/ScopedCssBaseline";
+import Values from "./Screens/Values";
 
 import {Provider} from 'react-redux';
 import {initStore} from './store'
@@ -36,7 +35,15 @@ function App() {
             <Route exact path='/' component={Dashboard} />
             <Route path='/pokazania' component={Pokazania} />
             <Route path='/profile' component={Profile}/>
-            <Route path='/gas' component={Gas}/>
+            <Route path='/gas' render={(props) => (
+                <Values {...props} types={['Газ']} />
+            )}/>
+            <Route path='/electricity' render={(props) => (
+                <Values {...props} types={['Электричество']} />
+            )}/>
+            <Route path='/water' render={(props) => (
+                <Values {...props} types={['Холодная вода', 'Горячая вода']} />
+            )}/>
         </BrowserRouter>
       </Provider>
     );

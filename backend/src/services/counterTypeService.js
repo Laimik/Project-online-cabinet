@@ -1,6 +1,6 @@
 module.exports = {
     getCounterType: async () => {
-        const pool = await require("../database/database").getConnectionPool();
+        const pool = await require("../database/database").connectionPool;
         const [rows] = await pool.execute(
             'SELECT * FROM counter_types',
             []
@@ -9,7 +9,7 @@ module.exports = {
     },
 
     getCounterTypeById: async (counterTypeId) => {
-        const pool = await require("../database/database").getConnectionPool();
+        const pool = await require("../database/database").connectionPool;
         const [rows] = await pool.execute(
             'SELECT * FROM counter_types WHERE id = ?',
             [counterTypeId]

@@ -1,15 +1,16 @@
 module.exports = {
-    getAddresses: async(userId) => {
-        const pool = await require("../database/database").getConnectionPool();
+    getAddresses: async (userId) => {
+        const pool = await require("../database/database").connectionPool;
         const [rows] = await pool.execute(
             'SELECT * FROM addresses WHERE user_id = ?',
             [userId]
         );
+
         return rows;
     },
 
-    getAddressById: async(userId, addressId) => {
-        const pool = await require("../database/database").getConnectionPool();
+    getAddressById: async (userId, addressId) => {
+        const pool = await require("../database/database").connectionPool;
         const [rows] = await pool.execute(
             'SELECT * FROM addresses WHERE user_id = ? AND id = ?',
             [userId, addressId]
@@ -22,8 +23,8 @@ module.exports = {
         }
     },
 
-    createAddress: async(userId, address, apartments, fias) => {
-        const pool = await require("../database/database").getConnectionPool();
+    createAddress: async (userId, address, apartments, fias) => {
+        const pool = await require("../database/database").connectionPool;
         await pool.query(
             "INSERT INTO addresses (user_id, address, apartments, fias_code) " +
             "VALUES (?,?,?,?)",
@@ -35,8 +36,8 @@ module.exports = {
         return await module.exports.getAddressById(userId, id);
     },
 
-    updateAddress: async(address) => {
-        const pool = await require("../database/database").getConnectionPool();
+    updateAddress: async (address) => {
+        const pool = await require("../database/database").connectionPool;
         await pool.query(
             "UPDATE addresses SET address = ?, apartments = ?, fias_code = ? WHERE id = ? AND user_id = ?",
             [address.address, address.apartments, address.fias, address.id, address.userId]
@@ -49,8 +50,8 @@ module.exports = {
         return rows[0];
     },
 
-    deleteAddresses: async(addressId, userId) => {
-        const pool = await require("../database/database").getConnectionPool();
+    deleteAddresses: async (addressId, userId) => {
+        const pool = await require("../database/database").connectionPool;
         await pool.query(
             "DELETE FROM addresses WHERE id = ? AND user_id = ?",
             [addressId, userId]

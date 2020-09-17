@@ -10,10 +10,10 @@ module.exports = {
     //   ...
     // ]
     getRates: async (options) => {
-        const pool = await require("../database/database").getConnectionPool();
+        const pool = await require("../database/database").connectionPool;
         let query = 'SELECT * FROM rate\n';
-        const args = [];
 
+        const args = [];
         if (options) {
             if (options.where) {
                 let where = 'WHERE ';
@@ -47,7 +47,7 @@ module.exports = {
     },
 
     getRateById: async (rateId) => {
-        const pool = await require("../database/database").getConnectionPool();
+        const pool = await require("../database/database").connectionPool;
         const [rows] = await pool.execute(
             'SELECT * FROM rate WHERE id = ?',
             [rateId]
@@ -60,7 +60,7 @@ module.exports = {
     },
 
     createRate: async(rate, counterTypeId, dateBegin) => {
-        const pool = await require("../database/database").getConnectionPool();
+        const pool = await require("../database/database").connectionPool;
         await pool.query(
             "INSERT INTO rate (rate, counter_type_id, date_begin)" +
             " VALUES (?,?,?)",
@@ -73,7 +73,7 @@ module.exports = {
     },
 
     updateRate: async(rate) => {
-        const pool = await require("../database/database").getConnectionPool();
+        const pool = await require("../database/database").connectionPool;
         await pool.query(
             "UPDATE rate SET rate = ?, counter_type_id = ?, date_begin = ? WHERE id = ?",
             [rate.rate, rate.counterTypeId, rate.dateBegin, rate.id]
@@ -87,7 +87,7 @@ module.exports = {
     },
 
     deleteRate: async(rateId) => {
-        const pool = await require("../database/database").getConnectionPool();
+        const pool = await require("../database/database").connectionPool;
         await pool.query(
             "DELETE FROM counters WHERE id = ?",
             [rateId]
