@@ -12,56 +12,11 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Alert from '@material-ui/lab/Alert';
 
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-
-import {signIn, signUp} from '../../../store/authActions'
 import {Redirect} from "react-router";
 
-async function signInReq(email, password) {
-  const response = await fetch(
-    `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/auth/sign_in`, {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
+import {signIn,signUp} from "../../../Services/authService"
 
-    },
-    body: JSON.stringify({
-      email,
-      password,
-    }),
-  });
-  if (response.ok) {
-    return await response.json()
-  }
-  else if (response.status === 401) {
-    return null
-  }
-}
-async function signUpReq(email, password, name, phoneNumber) {
-  const response = await fetch(
-    `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/auth/sign_up`, {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      email,
-      password,
-      name,
-      phone_number: phoneNumber
-    }),
-  });
-  if (response.ok) {
-    return "registred"
-  } else if (response.status===302){
-    return "dublicate"
-  } else {
-    alert ("При регистрации возникла ошибка")
-  }
-}
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -128,7 +83,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function LoginForm(props) {
+export default function LoginForm(props) {
   //component state
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
@@ -146,7 +101,7 @@ function LoginForm(props) {
   const [isWrongPhone, setIsWrongPhone] = React.useState(false);
   const [isUserExist, setIsUserExist] = React.useState(false);
   const [isRegistred, setIsRegistred] = React.useState(false);
-
+  const [isSignedIn, setIsSignedIn] = React.useState(false);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -183,10 +138,10 @@ function LoginForm(props) {
       } else {
         setIsWrongEmail(false)
         await signIn(emailValue, passwordValue);
-        const token = await signInReq(emailValue, passwordValue);
+        const token = await signIn(emailValue, passwordValue);
         if (token) {
-          props.signIn(emailValue, token);
-          setIsWrongPassword(false)
+          setIsWrongPassword(false);
+          setIsSignedIn(true);
         } else {
           setIsWrongPassword(true)
         }
@@ -218,10 +173,9 @@ function LoginForm(props) {
               setIsPasswordsEqual(false)
             } else {
               setIsPasswordsEqual(true)
-              const result = await signUpReq(emailValue, passwordValue, nameValue, phoneValue);
+              const result = await signUp(emailValue, passwordValue, nameValue, phoneValue);
               if (result === "registred") {
                 setIsRegistred(true);
-                props.signUp(emailValue)
               } else if (result === "dublicate") {
                 setIsUserExist(true);
               }
@@ -231,7 +185,7 @@ function LoginForm(props) {
       }
     }
   };
-  if (props.accessToken) {
+  if (isSignedIn) {
     return <Redirect to={'/'}/>
   } else {
     return (
@@ -350,12 +304,3 @@ function LoginForm(props) {
     );
   }
 }
-const mapStateToProps = (store) => {
-  return {
-    accessToken: store.accessToken,
-    email: store.email
-  }
-}
-const mapDispatchToProps = (dispatch) => bindActionCreators({ signIn, signUp }, dispatch)
-
-export default connect(mapStateToProps, mapDispatchToProps)(LoginForm)

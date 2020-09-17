@@ -16,9 +16,7 @@ import moment from "moment";
 import localization from 'moment/locale/ru';
 import Values from "./Screens/Values";
 
-import {Provider} from 'react-redux';
-import {initStore} from './store'
-const store = initStore();
+
 
 function App() {
 
@@ -27,7 +25,6 @@ function App() {
     }, []);
 
     return (
-      <Provider store = {store}>
         <BrowserRouter>
             <Route exact path='/sign_in' component={SignIn} />
             <Route exact path='/sign_up' component={SignUp} />
@@ -45,7 +42,6 @@ function App() {
                 <Values {...props} types={['Холодная вода', 'Горячая вода']} />
             )}/>
         </BrowserRouter>
-      </Provider>
     );
 }
 

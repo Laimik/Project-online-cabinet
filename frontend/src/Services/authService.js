@@ -6,7 +6,8 @@ export async function isAuthenticated() {
 
 export async function signIn(email, password) {
     const response = await fetch(
-        `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/auth/sign_in`, {
+       // `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/auth/sign_in`, {
+       `http://localhost:3000/auth/sign_in`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -21,12 +22,17 @@ export async function signIn(email, password) {
     if (response.ok){
         const json = await response.json();
         await setToken(json.accessToken);
+        return await json
+    }
+    else if (response.status === 401) {
+        return null
     }
 }
 
 export async function signUp(email, password, name, phoneNumber) {
     const response = await fetch(
-        `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/auth/sign_up`, {
+        //`http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/auth/sign_up`, {
+        `http://localhost:3000/auth/sign_up`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -40,10 +46,13 @@ export async function signUp(email, password, name, phoneNumber) {
             }),
         });
 
-    if (!response.ok){
-        //ToDo обработка ошибок регистрации
-        //throw new Error( await response.json);
-    }
+        if (response.ok) {
+            return "registred"
+          } else if (response.status===302){
+            return "dublicate"
+          } else {
+            alert ("При регистрации возникла ошибка")
+          }
 }
 
 export async function signOut() {

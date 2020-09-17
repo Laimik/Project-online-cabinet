@@ -28,7 +28,8 @@ export default function authGuard(WrappedComponent) {
                 </Container>;
             } else {
                 return !this.state.isAuthenticated
-                    ? <Redirect to={'/sign_in'}/>
+ //                   ? <Redirect to={'/sign_in'}/>  
+                    ? <Redirect to={'/auth'}/> //Alice: Замена формы входа/регистрации
                     : <WrappedComponent {...this.props} />;
             }
         }
