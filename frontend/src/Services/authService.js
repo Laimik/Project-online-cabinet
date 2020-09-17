@@ -6,8 +6,7 @@ export async function isAuthenticated() {
 
 export async function signIn(email, password) {
     const response = await fetch(
-       // `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/auth/sign_in`, {
-       `http://localhost:3000/auth/sign_in`, {
+        `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/auth/sign_in`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -31,8 +30,7 @@ export async function signIn(email, password) {
 
 export async function signUp(email, password, name, phoneNumber) {
     const response = await fetch(
-        //`http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/auth/sign_up`, {
-        `http://localhost:3000/auth/sign_up`, {
+        `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/auth/sign_up`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
