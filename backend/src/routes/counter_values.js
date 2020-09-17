@@ -2,6 +2,7 @@ const express = require('express');
 const authenticateJWT = require("../middlewares/authenticateJWT");
 const router = express.Router({ mergeParams: true });
 require('dotenv').config();
+const moment = require('moment');
 
 const bodyParser = require("body-parser");
 const urlencodedParser = bodyParser.urlencoded({extended: false});
@@ -13,7 +14,13 @@ router.get('/', authenticateJWT, async (req, res) => {
     const counterId = req.params.counter_id;
     const user = req.user;
     try {
-        res.status(200).json(await getCounterValue(user.id, counterId));
+        const counterValues = await getCounterValue(user.id, counterId);
+        for (const counterValue of counterValues) {
+            if (moment(counterValue.registry_time).isSame(moment(), 'day')) {
+                counterValue.current = true;
+            }
+        }
+        res.status(200).json(counterValues);
     } catch (e){
         console.error(e);
         res.sendStatus(500);
@@ -25,10 +32,9 @@ router.get('/:id', authenticateJWT, async (req, res) => {
     const id = req.params.id
     const user = req.user;
     try {
-
-        const counterValues = await getCounterValueById(user.id, counterId, id);
-        if (counterValues) {
-            res.status(200).json(counterValues);
+        const counterValue = await getCounterValueById(user.id, counterId, id);
+        if (counterValue) {
+            res.status(200).json(counterValue);
         } else {
             res.sendStatus(404);
         }
@@ -40,14 +46,13 @@ router.get('/:id', authenticateJWT, async (req, res) => {
 
 router.post('/', [authenticateJWT, urlencodedParser, counterValueValidation], async (req, res) => {
     const counterId = req.params.counter_id;
-    const registryTime = req.body.registry_time;
     const value = req.body.value;
     const user = req.user;
 
     try {
         const counter = await getCounterById(user.id, counterId);
         if (counter){
-            const counterValue = await createCounterValue(user.id, counterId, registryTime, value);
+            const counterValue = await createCounterValue(user.id, counterId, new Date(), value);
             res.status(200).json(counterValue);
         } else {
             res.sendStatus(404);

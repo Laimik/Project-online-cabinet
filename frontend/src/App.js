@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
@@ -6,27 +6,40 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Dashboard from '../src/Components/Dashboard'
 import {BrowserRouter, Route } from 'react-router-dom'
 import  Pokazania from './Components/Pokazania'
+
 import LoginForm from './Components/auth/loginForm/loginForm'
+
+import SignIn from "./Screens/SignIn";
+import SignUp from "./Screens/SignUp";
+import Profile from "./Screens/Profile";
+import Gas from "./Screens/Gas";
+import moment from "moment";
+import localization from 'moment/locale/ru';
+import ScopedCssBaseline from "@material-ui/core/ScopedCssBaseline";
 
 import {Provider} from 'react-redux';
 import {initStore} from './store'
 const store = initStore();
 
 function App() {
-  return (
-    <Provider store = {store}>
-    <div>
-     <BrowserRouter> 
-     <Route exact path='/' component={Dashboard} />
-     <Route path='/pokazania' component={Pokazania} />    
-     <Route path='/auth' component={LoginForm} />
-    </BrowserRouter>
-  
-    
 
-    </div>
-    </Provider>
-  );
+    useEffect(() => {
+        moment.locale('ru', localization);
+    }, []);
+
+    return (
+      <Provider store = {store}>
+        <BrowserRouter>
+            <Route exact path='/sign_in' component={SignIn} />
+            <Route exact path='/sign_up' component={SignUp} />
+            <Route path='/auth' component={LoginForm} />
+            <Route exact path='/' component={Dashboard} />
+            <Route path='/pokazania' component={Pokazania} />
+            <Route path='/profile' component={Profile}/>
+            <Route path='/gas' component={Gas}/>
+        </BrowserRouter>
+      </Provider>
+    );
 }
 
 export default App;

@@ -41,7 +41,7 @@ module.exports = {
         return await module.exports.getCounterValueById(userId, counterId, id);
     },
 
-    updateCounterValue: async(counterValue) => {
+    updateCounterValue: async(userId, counterValue) => {
         const pool = await require("../database/database").getConnectionPool();
         await pool.query(
             "UPDATE counter_values\n" +
@@ -49,7 +49,7 @@ module.exports = {
             " registry_time = ?,\n" +
             " value = ?\n" +
             " WHERE id = ? AND counter_id IN (SELECT id FROM counters WHERE user_id = ?)",
-            [counterValue.counterId, counterValue.registryTime, counterValue.value, counterValue.id, counterValue.userId]
+            [counterValue.counter_id, counterValue.registry_time, counterValue.value, counterValue.id, userId]
         );
         const [rows] = await pool.execute(
             'SELECT * FROM counter_values WHERE id = ?',
