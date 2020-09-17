@@ -80,7 +80,21 @@ const useStyles = makeStyles((theme) => ({
   authAlert: {
     position: "absolute",
     bottom: '10px'
-  }
+  },
+  [theme.breakpoints.up('sm')]:{
+    authTabsBody:{
+      width:"60vw",
+      height:"50vh",
+      margin:"0 auto"
+    },
+  },
+  [theme.breakpoints.up('md')]:{
+    authTabsBody:{
+      width:"30vw",
+      height:"50vh",
+      margin:"0 auto"
+    },
+  },
 }));
 
 export default function LoginForm(props) {
@@ -197,7 +211,7 @@ export default function LoginForm(props) {
               <Tab label="Регистрация" {...a11yProps(1)} />
             </Tabs>
           </AppBar>
-          <TabPanel value={value} index={0} className={classes.authTabs}>
+          <TabPanel value={value} index={0} className={classes.authTabsBody}>
             <form className={classes.authForm} onSubmit={handleEnter}>
               <TextField
                   id="auth-email"
@@ -219,12 +233,12 @@ export default function LoginForm(props) {
                   required
               />
 
-              <FormControlLabel
+              {/* <FormControlLabel
                   control={
                     <Checkbox name="saveSession" color="primary"/>
                   }
                   label="Запомнить меня"
-              />
+              /> */}
               <Button variant="contained" color="primary" onClick={handleEnter} type="submit">
                 Войти
               </Button>
@@ -237,7 +251,7 @@ export default function LoginForm(props) {
 
             </form>
           </TabPanel>
-          <TabPanel value={value} index={1}>
+          <TabPanel value={value} index={1} className={classes.authTabsBody}>
             <form className={classes.authForm} onSubmit={handleRegistration}>
               <TextField
                   id="reg-email"
