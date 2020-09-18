@@ -8,7 +8,7 @@ import {BrowserRouter, Route } from 'react-router-dom'
 import  Pokazania from './Components/Pokazania'
 
 import LoginForm from './Components/auth/loginForm/loginForm'
-import ResetPasswordForm from './Components/auth/loginForm/resetPasswordForm'
+import ResetPasswordForm from './Components/auth/resetPasswordForm'
 
 import SignIn from "./Screens/SignIn";
 import SignUp from "./Screens/SignUp";
