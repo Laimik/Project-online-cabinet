@@ -8,6 +8,7 @@ import {BrowserRouter, Route } from 'react-router-dom'
 import  Pokazania from './Components/Pokazania'
 
 import LoginForm from './Components/auth/loginForm/loginForm'
+import ResetPasswordForm from './Components/auth/resetPasswordForm'
 
 import SignIn from "./Screens/SignIn";
 import SignUp from "./Screens/SignUp";
@@ -16,9 +17,7 @@ import moment from "moment";
 import localization from 'moment/locale/ru';
 import Values from "./Screens/Values";
 
-import {Provider} from 'react-redux';
-import {initStore} from './store'
-const store = initStore();
+
 
 function App() {
 
@@ -27,11 +26,11 @@ function App() {
     }, []);
 
     return (
-      <Provider store = {store}>
         <BrowserRouter>
             <Route exact path='/sign_in' component={SignIn} />
             <Route exact path='/sign_up' component={SignUp} />
-            <Route path='/auth' component={LoginForm} />
+            <Route exact path='/auth' component={LoginForm} />
+            <Route exact path='/auth/reset' component={ResetPasswordForm} />
             <Route exact path='/' component={Dashboard} />
             <Route path='/pokazania' component={Pokazania} />
             <Route path='/profile' component={Profile}/>
@@ -45,7 +44,6 @@ function App() {
                 <Values {...props} types={['Холодная вода', 'Горячая вода']} />
             )}/>
         </BrowserRouter>
-      </Provider>
     );
 }
 
