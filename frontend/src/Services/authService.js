@@ -21,6 +21,10 @@ export async function signIn(email, password) {
     if (response.ok){
         const json = await response.json();
         await setToken(json.accessToken);
+        return await json
+    }
+    else if (response.status === 401) {
+        return null
     }
 }
 
@@ -40,10 +44,13 @@ export async function signUp(email, password, name, phoneNumber) {
             }),
         });
 
-    if (!response.ok){
-        //ToDo обработка ошибок регистрации
-        //throw new Error( await response.json);
-    }
+        if (response.ok) {
+            return "registred"
+          } else if (response.status===302){
+            return "dublicate"
+          } else {
+            alert ("При регистрации возникла ошибка")
+          }
 }
 
 export async function signOut() {
