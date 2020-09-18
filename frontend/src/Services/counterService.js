@@ -71,7 +71,6 @@ export async function sendCounterValues(values) {
         });
 
     if (!response.ok){
-        //ToDo обработка ошибок регистрации
-        //throw new Error( await response.json);
+        throw new Error("Something goes wrong");
     }
 }
