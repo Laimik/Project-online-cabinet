@@ -8,6 +8,7 @@ import {BrowserRouter, Route } from 'react-router-dom'
 import  Pokazania from './Components/Pokazania'
 
 import LoginForm from './Components/auth/loginForm/loginForm'
+import ResetPasswordForm from './Components/auth/loginForm/resetPasswordForm'
 
 import SignIn from "./Screens/SignIn";
 import SignUp from "./Screens/SignUp";
@@ -28,7 +29,8 @@ function App() {
         <BrowserRouter>
             <Route exact path='/sign_in' component={SignIn} />
             <Route exact path='/sign_up' component={SignUp} />
-            <Route path='/auth' component={LoginForm} />
+            <Route exact path='/auth' component={LoginForm} />
+            <Route exact path='/auth/reset' component={ResetPasswordForm} />
             <Route exact path='/' component={Dashboard} />
             <Route path='/pokazania' component={Pokazania} />
             <Route path='/profile' component={Profile}/>
