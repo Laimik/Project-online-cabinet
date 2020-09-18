@@ -8,14 +8,14 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+//import FormControlLabel from '@material-ui/core/FormControlLabel';
+//import Checkbox from '@material-ui/core/Checkbox';
 import Alert from '@material-ui/lab/Alert';
 
 import {Redirect} from "react-router";
-
 import {signIn,signUp} from "../../../Services/authService"
 
+import ResetPasswordDialog from "./resetPasswordDialog"
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -117,6 +117,7 @@ export default function LoginForm(props) {
   const [isRegistred, setIsRegistred] = React.useState(false);
   const [isSignedIn, setIsSignedIn] = React.useState(false);
 
+  
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -242,13 +243,15 @@ export default function LoginForm(props) {
               <Button variant="contained" color="primary" onClick={handleEnter} type="submit">
                 Войти
               </Button>
+              {(!requiredEmpty && !isWrongEmail && isWrongPassword) &&
+              <ResetPasswordDialog email={emailValue}/>}
               {requiredEmpty &&
               <Alert className={classes.authAlert} severity="error">Необходимо заполнить все поля</Alert>}
               {(!requiredEmpty && isWrongEmail) &&
               <Alert className={classes.authAlert} severity="error">Email не соответствует формату</Alert>}
               {(!requiredEmpty && !isWrongEmail && isWrongPassword) &&
               <Alert className={classes.authAlert} severity="error">Неверная пара логин и пароль</Alert>}
-
+              
             </form>
           </TabPanel>
           <TabPanel value={value} index={1} className={classes.authTabsBody}>
