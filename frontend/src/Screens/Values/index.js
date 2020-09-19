@@ -16,6 +16,8 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import {getCurrentRates, getRate} from "../../Services/rateService";
 import style from "./style.css"
 import Typography from "@material-ui/core/Typography";
+import Alert from "@material-ui/lab/Alert";
+import {classes} from "istanbul-lib-coverage";
 
 class Values extends Component {
     constructor(props) {
@@ -27,7 +29,8 @@ class Values extends Component {
             counters: [],
             counterTypes: [],
             rates: [],
-            currentValues: []
+            currentValues: [],
+            submitError: false
         }
     }
 
@@ -82,8 +85,15 @@ class Values extends Component {
     }
 
     submit = async () => {
-        await sendCounterValues(this.state.currentValues);
-        window.location.reload(false);
+        try {
+            await sendCounterValues(this.state.currentValues);
+            window.location.reload(false);
+        } catch (e) {
+            this.setState({submitError: true});
+            setTimeout(() => {
+                this.setState({submitError: false});
+            }, 3000);
+        }
     };
 
     renderRateForType(type) {
@@ -167,6 +177,9 @@ class Values extends Component {
                             Сохранить показания
                         </Button>
                     </form>
+                    <div hidden={!this.state.submitError}>
+                        <Alert severity="error">Что-то пошло не так, попробуйте позже</Alert>
+                    </div>
                 </Layout>
             )
         }
