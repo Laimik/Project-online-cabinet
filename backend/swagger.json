@@ -539,7 +539,7 @@
         }
       }
     },
-    "/api/v1/counters/{counter_id}/values": {
+    "/api/v1/counter_values": {
       "get": {
         "tags": [
           "Counter value"
@@ -548,16 +548,6 @@
         "security": [
           {
             "BearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "counter_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
           }
         ],
         "responses": {
@@ -587,16 +577,6 @@
         "security": [
           {
             "BearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "counter_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
           }
         ],
         "requestBody": {
@@ -629,7 +609,7 @@
         }
       }
     },
-    "/api/v1/counters/{counter_id}/values/{id}": {
+    "/api/v1/counter_values/{id}": {
       "get": {
         "tags": [
           "Counter value"
@@ -641,14 +621,6 @@
           }
         ],
         "parameters": [
-          {
-            "name": "counter_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          },
           {
             "name": "id",
             "in": "path",
@@ -688,14 +660,6 @@
           }
         ],
         "parameters": [
-          {
-            "name": "counter_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          },
           {
             "name": "id",
             "in": "path",
@@ -745,14 +709,6 @@
           }
         ],
         "parameters": [
-          {
-            "name": "counter_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          },
           {
             "name": "id",
             "in": "path",
