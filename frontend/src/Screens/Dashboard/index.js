@@ -4,9 +4,8 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import authGuard from "../../Components/AuthGuard";
 import Layout from "../Layout/index";
-import TableValue from "./table";
 import FilterGroup from "./FilterGroup";
-import SimpleTable from "./table";
+import ValuesTable from "./ValuesTable";
 import {getAddresses} from "../../Services/addressService";
 import {getCounters} from "../../Services/counterService";
 import {getCounterTypes} from "../../Services/counterTypeService";
@@ -24,7 +23,9 @@ class Dashboard extends Component {
             counters: [],
             selectedCounterIndexes: [],
             counterTypes: [],
-            selectedCounterTypeIndexes: []
+            selectedCounterTypeIndexes: [],
+            counterValues: [],
+            rates: []
         }
     }
 
@@ -32,12 +33,38 @@ class Dashboard extends Component {
         const addresses = await getAddresses();
         const counters = await getCounters();
         const counterTypes = await getCounterTypes();
+        const rates = await getCurrentRates();
+        const counterValues = await getCounterValues();
 
         this.setState({
             loading: false,
             addresses: addresses,
             counters: counters,
             counterTypes: counterTypes,
+            counterValues: counterValues,
+            rates: rates
+        });
+    }
+
+    async applyFilters(selectedAddressIndexes, selectedCounterTypeIndexes, selectedCounterIndexes) {
+        let options = {
+            addresses: [],
+            counterTypes: [],
+            counters: []
+        };
+        for (const index of selectedAddressIndexes) {
+            options.addresses.push(this.state.addresses[index]);
+        }
+        for (const index of selectedCounterTypeIndexes){
+            options.counterTypes.push(this.state.counterTypes[index]);
+        }
+        for (const index of selectedCounterIndexes){
+            options.counters.push(this.state.counters[index]);
+        }
+
+        const counterValues = await getCounterValues(options);
+        this.setState({
+            counterValues: counterValues
         });
     }
 
@@ -54,7 +81,12 @@ class Dashboard extends Component {
                             </Grid>
                             <Grid item xs={12} md={12} lg={12}>
                                 <Paper>
-                                    <SimpleTable/>
+                                    <ValuesTable
+                                        counterValues={this.state.counterValues}
+                                        counters={this.state.counters}
+                                        rates={this.state.rates}
+                                        types={this.state.counterTypes}
+                                    />
                                 </Paper>
                             </Grid>
                         </Grid>
@@ -66,66 +98,92 @@ class Dashboard extends Component {
                                         label: address.address
                                     }})}
                                     selectedIndexes={this.state.selectedAddressIndexes}
-                                    onSelected={index => {
+                                    onSelected={async (index) => {
                                         let selectedAddressIndexes = [...this.state.selectedAddressIndexes];
                                         selectedAddressIndexes.push(index);
                                         this.setState({
                                             selectedAddressIndexes: selectedAddressIndexes
-                                        })
+                                        });
+                                        await this.applyFilters(selectedAddressIndexes,
+                                            this.state.selectedCounterTypeIndexes,
+                                            this.state.selectedCounterIndexes);
                                     }}
-                                    onUnSelected={index => {
+                                    onUnSelected={async (index) => {
                                         let selectedAddressIndexes = [...this.state.selectedAddressIndexes];
                                         const indexToRemove = selectedAddressIndexes.indexOf(index);
                                         selectedAddressIndexes.splice(indexToRemove, 1);
                                         this.setState({
                                             selectedAddressIndexes: selectedAddressIndexes
-                                        })
+                                        });
+                                        await this.applyFilters(selectedAddressIndexes,
+                                            this.state.selectedCounterTypeIndexes,
+                                            this.state.selectedCounterIndexes);
                                     }}
                                 />
                                 <FilterGroup/>
                                 <FilterGroup
+                                    defaultChecked
                                     label={"Тип Счетчика"}
                                     items={this.state.counterTypes.map(counterTypes => { return {
                                         label: counterTypes.name
                                     }})}
                                     selectedIndexes={this.state.selectedCounterTypeIndexes}
-                                    onSelected={index => {
+                                    onSelected={async (index) => {
                                         let selectedCounterTypeIndexes = [...this.state.selectedCounterTypeIndexes];
                                         selectedCounterTypeIndexes.push(index);
                                         this.setState({
                                             selectedCounterTypeIndexes: selectedCounterTypeIndexes
-                                        })
+                                        });
+                                        await this.applyFilters(
+                                            this.state.selectedAddressIndexes,
+                                            selectedCounterTypeIndexes,
+                                            this.state.selectedCounterIndexes);
                                     }}
-                                    onUnSelected={index => {
+                                    onUnSelected={async (index) => {
                                         let selectedCounterTypeIndexes = [...this.state.selectedCounterTypeIndexes];
                                         const indexToRemove = selectedCounterTypeIndexes.indexOf(index);
                                         selectedCounterTypeIndexes.splice(indexToRemove, 1);
                                         this.setState({
                                             selectedCounterTypeIndexes: selectedCounterTypeIndexes
-                                        })
+                                        });
+                                        await this.applyFilters(
+                                            this.state.selectedAddressIndexes,
+                                            selectedCounterTypeIndexes,
+                                            this.state.selectedCounterIndexes);
                                     }}
                                 />
                                 <FilterGroup/>
                                 <FilterGroup
+                                    defaultChecked
                                     label={"Номер Счетчика"}
                                     items={this.state.counters.map(counters => { return {
                                         label: counters.name
                                     }})}
                                     selectedIndexes={this.state.selectedCounterIndexes}
-                                    onSelected={index => {
+                                    onSelected={async (index)=> {
                                         let selectedCounterIndexes = [...this.state.selectedCounterIndexes];
                                         selectedCounterIndexes.push(index);
                                         this.setState({
                                             selectedCounterIndexes: selectedCounterIndexes
-                                        })
+                                        });
+                                        await this.applyFilters(
+                                            this.state.selectedAddressIndexes,
+                                            this.state.selectedCounterTypeIndexes,
+                                            selectedCounterIndexes
+                                        );
                                     }}
-                                    onUnSelected={index => {
+                                    onUnSelected={async (index)=> {
                                         let selectedCounterIndexes = [...this.state.selectedCounterIndexes];
                                         const indexToRemove = selectedCounterIndexes.indexOf(index);
                                         selectedCounterIndexes.splice(indexToRemove, 1);
                                         this.setState({
                                             selectedCounterIndexes: selectedCounterIndexes
-                                        })
+                                        });
+                                        await this.applyFilters(
+                                            this.state.selectedAddressIndexes,
+                                            this.state.selectedCounterTypeIndexes,
+                                            selectedCounterIndexes
+                                        );
                                     }}
                                 />
                                 <FilterGroup/>

@@ -13,11 +13,10 @@ import authGuard from "../../Components/AuthGuard";
 import MenuItem from "@material-ui/core/MenuItem";
 import Container from "@material-ui/core/Container";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import {getCurrentRates, getRate} from "../../Services/rateService";
+import {getCurrentRates} from "../../Services/rateService";
 import style from "./style.css"
 import Typography from "@material-ui/core/Typography";
 import Alert from "@material-ui/lab/Alert";
-import {classes} from "istanbul-lib-coverage";
 
 class Values extends Component {
     constructor(props) {
@@ -57,9 +56,9 @@ class Values extends Component {
         const rates = await getCurrentRates();
 
         const address = addresses[0];
+        const counterValues = await getCounterValues();
         const currentValues = [];
         for (const counter of counters) {
-            const counterValues = await getCounterValues(counter)
             const counterCurrentValue = counterValues
                 .find(counterValue => counterValue.current &&
                     counterValue.counter_id === counter.id);
@@ -86,7 +85,9 @@ class Values extends Component {
 
     submit = async () => {
         try {
-            await sendCounterValues(this.state.currentValues);
+            const counterValues = this.state.currentValues.filter(currentValue => currentValue.value);
+            console.log(counterValues);
+            await sendCounterValues(counterValues);
             window.location.reload(false);
         } catch (e) {
             this.setState({submitError: true});

@@ -5,6 +5,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
+
 class FilterGroup extends Component {
     constructor(props) {
         super(props)
@@ -13,6 +14,7 @@ class FilterGroup extends Component {
     componentDidUpdate () {
         console.log(this.props.selectedIndexes)
     }
+
 
     render() {
         if (this.props.items) {
@@ -30,8 +32,10 @@ class FilterGroup extends Component {
                                                            } else {
                                                                this.props.onUnSelected(index);
                                                            }
-                                                       }}/>}
+                                                       }}
+                                                       />}
                                     label={item.label}
+
                                 />)
                             })}
                         </FormGroup>
