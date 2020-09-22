@@ -728,7 +728,6 @@
         }
       }
     },
-
     "/api/v1/profile": {
       "get": {
         "tags": [
@@ -1026,6 +1025,40 @@
           }
         }
       }
+    },
+    "/api/v1/stats/history":{
+      "get": {
+        "tags": [
+          "stats"
+        ],
+        "summary": "Get history",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All ok, history received",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#components/schemas/HistoryEntry"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "History type not found"
+          },
+          "500": {
+            "description": "Something went wrong"
+          }
+        }
+      }
     }
   },
 
@@ -1154,7 +1187,8 @@
               "type": "integer"
             },
             "rate": {
-              "type": "string"
+              "type": "number",
+              "format": "float"
             },
             "counter_type_id": {
               "type": "integer"
@@ -1178,6 +1212,30 @@
               "type": "string",
               "example": "2020-01-01",
               "format": "date"
+            }
+          }
+        },
+        "HistoryEntry": {
+          "properties": {
+            "counter_name": {
+              "type": "string"
+            },
+            "counter_type": {
+              "type": "string"
+            },
+            "registry_time": {
+              "type": "string",
+              "example": "2020-08-26",
+              "format": "date"
+            },
+            "value": {
+              "type": "number",
+              "example": 15.6,
+              "format": "float"
+            },
+            "rate": {
+              "type": "number",
+              "format": "float"
             }
           }
         }
