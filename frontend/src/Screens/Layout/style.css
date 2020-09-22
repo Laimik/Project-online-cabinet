@@ -1,6 +1,4 @@
 .footer {
-    position: absolute;
-    bottom: 0;
     width: 100%;
 }
 .phone{
@@ -8,4 +6,11 @@
 }
 .email{
     padding: 0 0 0 10%;
+}
+.empty {
+    flex: 1;
+}
+main{
+    display: flex;
+    flex-direction: column;
 }

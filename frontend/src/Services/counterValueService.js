@@ -2,24 +2,6 @@ import {getToken} from "./authService";
 
 export async function getCounterValues(options) {
     let url = `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/api/v1/counter_values`;
-    let parameters = '';
-    if (options) {
-        if (options.addresses) {
-            parameters +=  options.addresses.map(address => `addresses[]=${address.id}`).join('&');
-        }
-
-        if (options.counterTypes) {
-            if (parameters) parameters += '&'
-            parameters +=  options.counterTypes.map(counterType => `counter_types[]=${counterType.id}`).join('&');
-        }
-
-        if (options.counters) {
-            if (parameters) parameters += '&'
-            parameters +=  options.counters.map(counter => `counters[]=${counter.id}`).join('&');
-        }
-
-        if (parameters) url = url + '?' + parameters;
-    }
 
     const response = await fetch(
         url, {

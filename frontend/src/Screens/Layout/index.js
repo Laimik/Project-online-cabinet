@@ -224,10 +224,11 @@ export default function Layout(props) {
             <main className={classes.content}>
                 <div className={classes.toolbar} />
                 {props.children}
+                <div className={"empty"}/>
+                <Box className={"footer"}pt={4}>
+                    <Copyright />
+                </Box>
             </main>
-            <Box className={"footer"}pt={4}>
-                <Copyright />
-            </Box>
         </div>
     );
 }

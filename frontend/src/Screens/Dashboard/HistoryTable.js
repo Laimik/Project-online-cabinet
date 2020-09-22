@@ -14,13 +14,9 @@ import TablePagination from "@material-ui/core/TablePagination";
 import TablePaginationActions from "@material-ui/core/TablePagination/TablePaginationActions";
 import TableFooter from "@material-ui/core/TableFooter";
 
-class ValuesTable extends Component {
+class HistoryTable extends Component {
     constructor(props) {
         super(props)
-    }
-
-    getCounter(counterId) {
-        return this.props.counters.find(counter => counter.id === counterId);
     }
 
     render() {
@@ -30,39 +26,31 @@ class ValuesTable extends Component {
                     <TableHead>
                         <TableRow>
                             <TableCell>Номер счетчика</TableCell>
-                            <TableCell align="right">Дата показания</TableCell>
-                            <TableCell align="right">Показание</TableCell>
+                            <TableCell align="right">Тип счетчика</TableCell>
+                            <TableCell align="right">Дата подачи</TableCell>
+                            <TableCell align="right">Показания</TableCell>
                             <TableCell align="right">Тариф</TableCell>
                             <TableCell align="right">Сумма</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {this.props.counterValues.map((counterValue, index) => {
+                        {this.props.history.map((entry, index) => {
                             return (
                                 <TableRow key={index}>
                                     <TableCell component="th"
-                                               scope="row">{this.getCounter(counterValue.counter_id).name || ''}
+                                               scope="row">{entry.counter_name}
                                     </TableCell>
-                                    <TableCell align="right">{moment(counterValue.registry_time).format('L')}</TableCell>
-                                    <TableCell align="right">{counterValue.value}</TableCell>
-                                    <TableCell align="right">{}</TableCell>
-                                    <TableCell align="right">{}</TableCell>
+                                    <TableCell align="right">{entry.counter_type}</TableCell>
+                                    <TableCell align="right">{moment(entry.registry_time).format('L')}</TableCell>
+                                    <TableCell align="right">{Math.round(entry.value)}</TableCell>
+                                    <TableCell align="right">{entry.rate || 0}</TableCell>
+                                    <TableCell align="right">{Math.round(entry.value) * (entry.rate || 0)}</TableCell>
                                 </TableRow>)
                         })}
                     </TableBody>
-                    <TableFooter>
-                        <TableRow>
-                            <TablePagination
-                                count={this.props.counterValues.length}
-                                page={0}
-                                onChangePage={() => {}}
-                                ActionsComponent={TablePaginationActions}
-                            />
-                        </TableRow>
-                    </TableFooter>
                 </Table>
             </TableContainer>
         );
     }
 }
-export default authGuard(ValuesTable);
+export default authGuard(HistoryTable);
