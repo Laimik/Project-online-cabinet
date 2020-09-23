@@ -10,6 +10,7 @@ const counterRouter = require('./routes/counters');
 const counterValuesRouter = require('./routes/counter_values');
 const profileRouter = require('./routes/profile');
 const rateRouter = require('./routes/rates');
+const historyRouter = require('./routes/stats');
 
 const swaggerUi = require('swagger-ui-express');
 
@@ -48,8 +49,9 @@ app.use('/auth', authRouter);
 app.use('/api/v1/counter_types', counterTypeRouter);
 app.use('/api/v1/addresses', addressesRouter);
 app.use('/api/v1/counters', counterRouter);
-app.use('/api/v1/counters/:counter_id/values', counterValuesRouter);
+app.use('/api/v1/counter_values', counterValuesRouter);
 app.use('/api/v1/profile', profileRouter);
 app.use('/api/v1/rate', rateRouter);
+app.use('/api/v1/stats', historyRouter);
 
 module.exports = app;

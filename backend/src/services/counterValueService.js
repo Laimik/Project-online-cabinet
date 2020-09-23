@@ -1,24 +1,44 @@
 module.exports = {
-    getCounterValue: async(userId, counterId) => {
+    getCounterValues: async(userId, addresses, counterTypes, counters) => {
         const pool = await require("../database/database").connectionPool;
-        const [rows] = await pool.execute(
-            'SELECT cv.*\n' +
+        let query = 'SELECT cv.*\n' +
             'FROM counter_values cv\n' +
-            'INNER JOIN counters c ON cv.counter_id = c.id AND c.user_id = ?\n' +
-            'WHERE cv.counter_id = ?',
-            [userId, counterId],
+            'INNER JOIN counters c ON cv.counter_id = c.id AND c.user_id = ?';
+
+        let params = [userId]
+
+        let where = '';
+        if (addresses) {
+            where += `\nWHERE c.address_id IN (${addresses.join(',')})`;
+        }
+
+        if (counterTypes) {
+            where += where ? `\nAND c.counter_type_id IN (${counterTypes.join(',')})`
+                : `\nWHERE c.counter_type_id IN (${counterTypes.join(',')})`;
+        }
+        if (counters) {
+            where += where ? `\nAND c.id IN (${counters.join(',')})`
+                : `\nWHERE c.id IN (${counters.join(',')})`;
+        }
+
+        query += where;
+        console.log(query);
+
+        const [rows] = await pool.execute(
+            query,
+            params,
         );
         return rows;
     },
 
-    getCounterValueById: async(userId, counterId, id) => {
+    getCounterValueById: async(userId, id) => {
         const pool = await require("../database/database").connectionPool;
         const [rows] = await pool.execute(
             'SELECT cv.*\n' +
             'FROM counter_values cv\n' +
             'INNER JOIN counters c ON cv.counter_id = c.id AND c.user_id = ?\n' +
-            'WHERE cv.counter_id = ? AND cv.id = ?\n',
-            [userId, counterId, id]
+            'WHERE cv.id = ?\n',
+            [userId, id]
         );
 
         if (rows.length > 0) {
@@ -59,11 +79,11 @@ module.exports = {
         return rows[0];
     },
 
-    deleteCounterValue: async(userId, counterId, id) => {
+    deleteCounterValue: async(userId, id) => {
         const pool = await require("../database/database").connectionPool;
         await pool.connection("DELETE FROM counter_values\n" +
-            "WHERE id = ? AND counter_id IN (SELECT id FROM counters WHERE id = ? AND user_id = ?)",
-            [id, counterId, userId]
+            "WHERE id IN (SELECT id FROM counters WHERE id = ? AND user_id = ?)",
+            [id, userId]
         );
     }
 }
