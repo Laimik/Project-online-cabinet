@@ -1,6 +1,8 @@
 const express = require('express');
 const authenticateJWT = require("../middlewares/authenticateJWT");
 const router = express.Router();
+require('dotenv').config();
+const fetch = require('node-fetch');
 
 const bodyParser = require("body-parser");
 const urlencodedParser = bodyParser.urlencoded({extended: false});
@@ -17,6 +19,32 @@ router.get('/', authenticateJWT, async (req, res) => {
         }
     }
 );
+
+router.get('/search', authenticateJWT, async (req, res) => {
+    console.log(req.query.criteria)
+    const url = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address";
+    const criteria = req.query.criteria;
+
+    if (criteria) {
+        const options = {
+            method: "POST",
+            mode: "cors",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Authorization": "Token " + process.env.DADATA_API_KEY
+            },
+            body: JSON.stringify({
+                query: criteria
+            })
+        }
+
+        const response = await fetch(url, options)
+        res.status(200).json(await response.json());
+    } else {
+        res.status(200).json({"suggestions": []});
+    }
+});
 
 router.get('/:id', authenticateJWT, async (req, res) => {
         const id = req.params.id;
