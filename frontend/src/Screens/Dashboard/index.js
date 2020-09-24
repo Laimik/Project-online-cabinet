@@ -80,18 +80,22 @@ class Dashboard extends Component {
                     <Grid container spacing={3}>
                         <Grid container spacing={2} item xs={8} md={8} lg={8}>
                             <Grid item xs={12} md={12} lg={12}>
-                                <Paper style={{Height: 240}}>
-                                    <Chart
-                                        chartData={this.state.chartData}
-                                    />
-                                </Paper>
+                                <Card style={{Height: 240}}>
+                                    <CardContent>
+                                        <Chart
+                                            chartData={this.state.chartData}
+                                        />
+                                    </CardContent>
+                                </Card>
                             </Grid>
                             <Grid item xs={12} md={12} lg={12}>
-                                <Paper>
-                                    <HistoryTable
-                                        history={this.state.history}
-                                    />
-                                </Paper>
+                                <Card>
+                                    <CardContent>
+                                        <HistoryTable
+                                            history={this.state.history}
+                                        />
+                                    </CardContent>
+                                </Card>
                             </Grid>
                         </Grid>
                         <Grid item xs={4} md={4} lg={3}>

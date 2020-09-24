@@ -10,6 +10,14 @@ const colorsMap = {
     'Электричество': '#FFFF00',
 }
 
+const backgroundColorsMap = {
+    'Газ': '#87CEEB33',
+    'Горячая вода': '#FF000033',
+    'Холодная вода': '#1E90FF33',
+    'Электричество': '#FFFF0033',
+}
+
+
 class Chart extends Component {
     constructor(props) {
         super(props)
@@ -22,13 +30,15 @@ class Chart extends Component {
             const data = {...this.props.chartData};
             for (const dataset of data.datasets || []) {
                 dataset.borderColor = colorsMap[dataset.label];
+                dataset.backgroundColor = backgroundColorsMap[dataset.label];
             }
 
             return data
         }
 
         const legend = {
-            display: false
+            display: true,
+            onClick: null
         }
 
         const options = {

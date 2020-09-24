@@ -8,16 +8,30 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import authGuard from "../../Components/AuthGuard";
-import FormGroup from "@material-ui/core/FormGroup";
 import moment from "moment";
 import TablePagination from "@material-ui/core/TablePagination";
-import TablePaginationActions from "@material-ui/core/TablePagination/TablePaginationActions";
-import TableFooter from "@material-ui/core/TableFooter";
 
 class HistoryTable extends Component {
     constructor(props) {
-        super(props)
+        super(props);
+        this.state = {
+            page: 0,
+            rowsPerPage: 5
+        }
     }
+
+    handleChangePage = (event, newPage) => {
+        this.setState({
+            page: newPage
+        });
+    };
+
+    handleChangeRowsPerPage = (event) => {
+        this.setState({
+            page: 0,
+            rowsPerPage: parseInt(event.target.value)
+        });
+    };
 
     render() {
         return (
@@ -34,7 +48,10 @@ class HistoryTable extends Component {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {this.props.history.map((entry, index) => {
+                        {this.props.history.filter((entry, index) =>
+                            index >= this.state.page * this.state.rowsPerPage &&
+                            index < (this.state.page + 1) * this.state.rowsPerPage
+                        ).map((entry, index) => {
                             return (
                                 <TableRow key={index}>
                                     <TableCell component="th"
@@ -49,6 +66,16 @@ class HistoryTable extends Component {
                         })}
                     </TableBody>
                 </Table>
+                <TablePagination
+                    rowsPerPageOptions={[5, 10, 25]}
+                    component="div"
+                    count={this.props.history.length}
+                    rowsPerPage={this.state.rowsPerPage}
+                    page={this.state.page}
+                    onChangePage={this.handleChangePage}
+                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                    labelRowsPerPage={'Строк на странице:'}
+                />
             </TableContainer>
         );
     }
