@@ -35,6 +35,28 @@ export async function getCounterById(id) {
     }
 }
 
+export async function postCounter(name, addressId, counterTypeId) {
+    const response = await fetch(
+        `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/api/v1/counters`,
+        {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + await getToken()
+            },
+            body: JSON.stringify({
+                name,
+                address_id: addressId,
+                counter_type_id: counterTypeId
+            }),
+        });
+
+    if (!response.ok){
+        throw new Error("Something goes wrong");
+    }
+}
+
 export async function updateCounter(counter) {
     const response = await fetch(
         `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/api/v1/addresses/${counter.id}`,

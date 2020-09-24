@@ -138,7 +138,6 @@ export default function Layout(props) {
                 })}
             >
                 <Toolbar>
-
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"
@@ -212,12 +211,6 @@ export default function Layout(props) {
                 </List>
                 <Divider />
                 <List>
-                    <ListItem button component="a" href={'/adding'} key={'Добавить Адрес/Счетчик'}>
-                        <ListItemIcon>
-                            <PlaylistAdd />
-                        </ListItemIcon>
-                        <ListItemText primary={'Добавить Адрес/Счетчик'} />
-                    </ListItem>
                     <ListItem button key={'Выход'} onClick={async () => {
                         await signOut();
                         window.location.reload(false);

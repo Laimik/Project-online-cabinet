@@ -23,6 +23,10 @@ import {ExpandLess, ExpandMore, StarBorder} from "@material-ui/icons";
 import {getCounterTypes} from "../../Services/counterTypeService";
 import Layout from "../Layout";
 import styles from "./style.css";
+import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
+import AddIcon from '@material-ui/icons/Add';
+import {classes} from "istanbul-lib-coverage";
 
 class Profile extends Component {
     constructor(props) {
@@ -108,12 +112,13 @@ class Profile extends Component {
                                     <TableCell align="right">
                                         {counter.name}
                                     </TableCell>
-                                    <TableCell>{}</TableCell>
                                 </TableRow>)
                         } else {
                             return null;
                         }
+
                     } )}
+                    <Button color="primary" size={"small"} href={'/add_counter'}>Добавить счетчик</Button>
                 </TableBody>
             </Table>
         </TableContainer>)
@@ -139,6 +144,7 @@ class Profile extends Component {
                     <div>
                         {this.renderAddresses()}
                     </div>
+                    <Button color="primary" className={"buttonNew"} size={"small"} href={'/add_address'}>Добавить адрес</Button>
                 </Layout>
             )
         }

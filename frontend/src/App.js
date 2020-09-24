@@ -8,6 +8,9 @@ import Dashboard from "./Screens/Dashboard"
 import moment from "moment";
 import localization from 'moment/locale/ru';
 import Values from "./Screens/Values";
+import Adding from "./Screens/Add/AddCounder";
+import AddCounter from "./Screens/Add/AddCounder";
+import AddAddress from "./Screens/Add/AddAddress";
 
 function App() {
 
@@ -30,6 +33,8 @@ function App() {
             <Route path='/water' render={(props) => (
                 <Values {...props} types={['Холодная вода', 'Горячая вода']} />
             )}/>
+            <Route exact path='/add_counter' component={AddCounter}/>
+            <Route exact path='/add_address' component={AddAddress}/>
         </BrowserRouter>
     );
 }

@@ -35,6 +35,28 @@ export async function getAddressById(id) {
     }
 }
 
+export async function postAddress(address, apartments, fiasCode) {
+    const response = await fetch(
+        `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/api/v1/addresses`,
+        {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + await getToken()
+            },
+            body: JSON.stringify({
+                address,
+                apartments,
+                fias_code: fiasCode
+            }),
+        });
+
+    if (!response.ok){
+        throw new Error("Something goes wrong");
+    }
+}
+
 export async function updateAddress(address) {
     const response = await fetch(
         `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/api/v1/addresses/${address.id}`,
