@@ -1,0 +1,10 @@
+#name {
+    font-size: 30px;
+}
+#email {
+    font-weight: bold;
+}
+
+ListItem{
+    width: 300px;
+}
