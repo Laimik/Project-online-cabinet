@@ -6,7 +6,7 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Layout from "../../Layout";
 import {getAddresses, postAddress} from "../../../Services/addressService";
-import {getCounters, sendCounterValues} from "../../../Services/counterService";
+import {getCounters, postCounter, sendCounterValues} from "../../../Services/counterService";
 import {getCounterTypes} from "../../../Services/counterTypeService";
 import {getCounterValues} from "../../../Services/counterValueService";
 import authGuard from "../../../Components/AuthGuard";
@@ -21,17 +21,43 @@ import NativeSelect from "@material-ui/core/NativeSelect";
 class AddACounter extends Component {
     constructor(props) {
         super(props)
+        const query = new URLSearchParams(this.props.location.search);
+
         this.state = {
-            loading: false,
+            loading: true,
             counterTypes: [],
             addresses: [],
-            name: ""
+            name: "",
+            counterType: undefined,
+            address_id: Number(query.get('address_id'))
         }
+
+        console.log(this.state)
+    }
+
+    async handleChange(event) {
+        const selectedId = event.target.value;
+        for (const counterType of this.state.counterTypes) {
+            if (selectedId === counterType.id) {
+                this.setState({
+                    counterType: counterType,
+                })
+            }
+        }
+    }
+
+    async componentDidMount() {
+        const counterTypes = await getCounterTypes();
+
+        this.setState({
+            loading: false,
+            counterTypes: counterTypes
+        });
     }
 
     submit = async () => {
         try {
-            await postAddress( this.state.address, this.state.apartment, this.state.fiasCode);
+            await postCounter( this.state.name, this.state.counterType.id, this.state.address_id);
             // window.location.reload(false);
         } catch (e) {
             this.setState({submitError: true});
@@ -48,39 +74,34 @@ class AddACounter extends Component {
             </Container>;
         } else {
             return (
-                <Layout label={'Добавить адрес'}>
+                <Layout label={'Добавить Счетчик'}>
                     <form onSubmit={async (e) => {
                         e.preventDefault();
                         await this.submit();
                     }}
                     >
                         <FormControl variant="outlined">
-                            <TextField
-                                id="outlined-password-input"
+                            <Select
+                                className={"addressSelect"}
                                 label="Адрес"
-                                variant="outlined"
-                                onChange={(e) => {
-                                    this.setState({address: e.target.value})
-                                }}
-                            />
+                                // fullWidth={true}
+                                value={this.state.counterTypes.id}
+                                onChange={event => this.handleChange(event)}
+                            >
+                                <MenuItem value="">
+                                </MenuItem>
+                                {this.state.counterTypes.map(counterTypes => {
+                                    return <MenuItem key={counterTypes.id} value={counterTypes.id}>{counterTypes.name}</MenuItem>
+                                })}
+                            </Select>
                         </FormControl>
                         <FormControl>
                             <TextField
                                 id="outlined-password-input"
-                                label="Квартира"
+                                label="Название счетчика"
                                 variant="outlined"
                                 onChange={(e) => {
-                                    this.setState({apartment: e.target.value})
-                                }}
-                            />
-                        </FormControl>
-                        <FormControl>
-                            <TextField
-                                id="outlined-password-input"
-                                label="Фиас код"
-                                variant="outlined"
-                                onChange={(e) => {
-                                    this.setState({fiasCode: e.target.value})
+                                    this.setState({name: e.target.value})
                                 }}
                             />
                         </FormControl>

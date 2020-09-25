@@ -162,6 +162,8 @@ class Values extends Component {
                                 value={this.state.address.id}
                                 onChange={event => this.handleChange(event)}
                             >
+                                <MenuItem value="">
+                                </MenuItem>
                                 {this.state.addresses.map(address => {
                                     return <MenuItem key={address.id} value={address.id}>{address.address}</MenuItem>
                                 })}

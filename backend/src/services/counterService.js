@@ -24,6 +24,7 @@ module.exports = {
         },
 
     createCounter: async(name, userId, addressId, counterTypeId) => {
+        console.log([name, userId, addressId, counterTypeId])
         const pool = await require("../database/database").connectionPool;
             await pool.query(
                 "INSERT INTO counters (name, user_id, address_id, counter_type_id)" +

@@ -44,7 +44,7 @@ router.post('/', [authenticateJWT, urlencodedParser, counterPostValidation], asy
         const addressId = req.body.address_id;
         const counterTypeId = req.body.counter_type_id;
         try {
-            const counter = await createCounter(name, user.id, addressId, counterTypeId);
+            const counter = await createCounter(name, user.id, counterTypeId, addressId);
 
             res.status(200).json(counter);
         } catch (e) {

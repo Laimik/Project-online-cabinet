@@ -118,7 +118,7 @@ class Profile extends Component {
                         }
 
                     } )}
-                    <Button color="primary" size={"small"} href={'/add_counter'}>Добавить счетчик</Button>
+                    <Button color="primary" size={"small"} href={`/add_counter?address_id=${address.id}`}>Добавить счетчик</Button>
                 </TableBody>
             </Table>
         </TableContainer>)

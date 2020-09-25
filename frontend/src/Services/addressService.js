@@ -35,6 +35,41 @@ export async function getAddressById(id) {
     }
 }
 
+export async function searchAddresses(options) {
+    let url = `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/api/v1/addresses/search`;
+    url += `?criteria=${options.criteria}`
+    url += `&detalization=${options.detalization}`;
+    if (options.region_fias_id) {
+        url += `&region_fias_id=${options.region_fias_id}`
+    }
+    if (options.area_fias_id) {
+        url += `&area_fias_id=${options.area_fias_id}`
+    }
+    if (options.city_fias_id) {
+        url += `&city_fias_id=${options.city_fias_id}`
+    }
+    if (options.settlement_fias_id) {
+        url += `&settlement_fias_id=${options.settlement_fias_id}`
+    }
+    if (options.street_fias_id) {
+        url += `&street_fias_id=${options.street_fias_id}`;
+    }
+
+    const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + await getToken()
+            }
+        });
+    if (response.ok){
+        return (await response.json()).suggestions;
+    } else {
+        return [];
+    }
+}
+
 export async function postAddress(address, apartments, fiasCode) {
     const response = await fetch(
         `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/api/v1/addresses`,
