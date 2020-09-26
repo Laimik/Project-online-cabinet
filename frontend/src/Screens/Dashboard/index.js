@@ -13,6 +13,7 @@ import {CardHeader, Padding} from "@material-ui/core";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import {getDynamic, getHistory} from "../../Services/statsService";
+import Chart from "./Chart";
 
 
 class Dashboard extends Component {
@@ -26,8 +27,8 @@ class Dashboard extends Component {
             selectedCounterIndexes: [],
             counterTypes: [],
             selectedCounterTypeIndexes: [],
-            history: []
-
+            history: [],
+            chartData: []
         }
     }
 
@@ -37,7 +38,6 @@ class Dashboard extends Component {
         const counterTypes = await getCounterTypes();
         const history = await getHistory();
         const chartData = await getDynamic();
-        console.log(chartData);
 
         this.setState({
             loading: false,
@@ -45,6 +45,7 @@ class Dashboard extends Component {
             counters: counters,
             counterTypes: counterTypes,
             history: history,
+            chartData: chartData
         });
     }
 
@@ -65,8 +66,10 @@ class Dashboard extends Component {
         }
 
         const history = await getHistory(options);
+        const chartData = await getDynamic(options);
         this.setState({
-            history: history
+            history: history,
+            chartData: chartData
         });
     }
 
@@ -75,18 +78,24 @@ class Dashboard extends Component {
             <Layout label={'Дашборд'}>
                 <Container maxWidth="lg">
                     <Grid container spacing={3}>
-                        {/* Chart */}
                         <Grid container spacing={2} item xs={8} md={8} lg={8}>
-                            {/*<Grid item xs={12} md={12} lg={12}>*/}
-                            {/*    <Paper style={{Height: 240}}>*/}
-                            {/*    </Paper>*/}
-                            {/*</Grid>*/}
                             <Grid item xs={12} md={12} lg={12}>
-                                <Paper>
-                                    <HistoryTable
-                                        history={this.state.history}
-                                    />
-                                </Paper>
+                                <Card style={{Height: 240}}>
+                                    <CardContent>
+                                        <Chart
+                                            chartData={this.state.chartData}
+                                        />
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                            <Grid item xs={12} md={12} lg={12}>
+                                <Card>
+                                    <CardContent>
+                                        <HistoryTable
+                                            history={this.state.history}
+                                        />
+                                    </CardContent>
+                                </Card>
                             </Grid>
                         </Grid>
                         <Grid item xs={4} md={4} lg={3}>

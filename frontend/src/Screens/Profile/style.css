@@ -8,3 +8,7 @@
 ListItem{
     width: 300px;
 }
+
+.buttonNew{
+    width: 15% !important;
+}

@@ -21,7 +21,7 @@ import {
     ExpandLess,
     ExpandMore,
     FlashOn,
-    InvertColors,
+    InvertColors, PlaylistAdd,
     StarBorder,
     Whatshot
 } from "@material-ui/icons";
@@ -138,7 +138,6 @@ export default function Layout(props) {
                 })}
             >
                 <Toolbar>
-
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"

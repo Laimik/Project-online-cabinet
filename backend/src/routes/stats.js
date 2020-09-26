@@ -30,36 +30,25 @@ router.get('/dynamic', authenticateJWT, async (req, res) => {
         try {
             const raw = await getDynamic(user.id, addresses, counterTypes, counters);
 
-            const labels = [];
-            const series = [];
-            for (const item of raw) {
-                if (!labels.find(label => label === item.registry_time)) {
-                    console.log(labels);
-                    console.log(item.registry_time);
-                    labels.push(item.registry_time);
-                }
-
-                if (!series.includes(item.counter_type)) {
-                    series.push(item.counter_type)
-                }
-            }
+            const uniqueDates = [...new Set(raw.map(item => item.registry_time.getTime()))];
+            const series = [...new Set(raw.map(item => item.counter_type))];
 
             let chartData = {
-                labels: labels,
+                labels: uniqueDates.map(uniqueDate => new Date(uniqueDate)),
                 datasets: series.map(single => { return {
                     label: single,
                     data: []
                 }})
             }
 
-            for (const label of chartData.labels) {
+            for (const uniqueDate of uniqueDates) {
                 for (const dataset of chartData.datasets) {
                     const values = raw.filter(item =>
-                        item.registry_time === label &&
-                        raw.counter_type === dataset.label);
+                        item.registry_time.getTime() === uniqueDate &&
+                        item.counter_type === dataset.label);
 
-                    let sum = values.reduce(function(a, b){
-                        return a.summ + b.summ;
+                    let sum = values.reduce(function(total, item){
+                        return total + item.summ;
                     }, 0);
 
                     dataset.data.push(sum);

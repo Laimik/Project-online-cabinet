@@ -70,7 +70,7 @@ module.exports = {
         }
 
         query += where;
-        query += '\nORDER BY registry_time DESC, counter_type'
+        query += '\nORDER BY registry_time, counter_type'
         console.log(query);
 
         const [rows] = await pool.execute(

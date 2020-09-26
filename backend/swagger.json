@@ -159,6 +159,42 @@
         }
       }
     },
+    "/api/v1/addresses/search": {
+      "get": {
+        "tags": [
+          "Addresses"
+        ],
+        "summary": "Search addresses by string criteria",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "criteria",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All ok, all addresses received",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong"
+          }
+        }
+      }
+    },
     "/api/v1/addresses/{id}": {
       "get": {
         "tags": [

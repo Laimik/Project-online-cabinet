@@ -11,11 +11,6 @@ class FilterGroup extends Component {
         super(props)
     }
 
-    componentDidUpdate () {
-        console.log(this.props.selectedIndexes)
-    }
-
-
     render() {
         if (this.props.items) {
             return (
