@@ -17,6 +17,7 @@ import {getCurrentRates} from "../../../Services/rateService";
 import Typography from "@material-ui/core/Typography";
 import Alert from "@material-ui/lab/Alert";
 import NativeSelect from "@material-ui/core/NativeSelect";
+import style from "./style.css"
 
 class AddACounter extends Component {
     constructor(props) {
@@ -58,7 +59,7 @@ class AddACounter extends Component {
     submit = async () => {
         try {
             await postCounter( this.state.name, this.state.counterType.id, this.state.address_id);
-            // window.location.reload(false);
+            window.location.href = '/profile';
         } catch (e) {
             this.setState({submitError: true});
             setTimeout(() => {
@@ -79,10 +80,11 @@ class AddACounter extends Component {
                         e.preventDefault();
                         await this.submit();
                     }}
+                          className={'counterForm'}
                     >
                         <FormControl variant="outlined">
                             <Select
-                                className={"addressSelect"}
+                                className={'counterTypeSelect'}
                                 label="Адрес"
                                 // fullWidth={true}
                                 value={this.state.counterTypes.id}
@@ -97,6 +99,7 @@ class AddACounter extends Component {
                         </FormControl>
                         <FormControl>
                             <TextField
+                                className={'counterName'}
                                 id="outlined-password-input"
                                 label="Название счетчика"
                                 variant="outlined"
@@ -105,7 +108,7 @@ class AddACounter extends Component {
                                 }}
                             />
                         </FormControl>
-                        <Button variant="contained" color="primary" type={"submit"}>
+                        <Button variant="contained" color="primary" type={"submit"} className={'counterButtom'}>
                             Сохранить
                         </Button>
                     </form>

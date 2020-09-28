@@ -50,6 +50,7 @@ router.get('/dynamic', authenticateJWT, async (req, res) => {
                     let sum = values.reduce(function(total, item){
                         return total + item.summ;
                     }, 0);
+                    console.log('БЛЯТЬ', sum)
 
                     dataset.data.push(sum);
                 }
