@@ -37,10 +37,8 @@ class AddAddress extends Component {
     submit = async () => {
         try {
             await postAddress(this.state.house.unrestricted_value, this.state.apartment, this.state.house.data.house_fias_id);
-            if (postAddress) {
-                return <Redirect to={'/profile'} />}
-
-        } catch (e) {
+            window.location.href = '/profile';
+           } catch (e) {
             this.setState({submitError: true});
             setTimeout(() => {
                 this.setState({submitError: false});

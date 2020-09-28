@@ -1,0 +1,18 @@
+.counterForm{
+    display: contents !important;
+}
+.counterName{
+    width: 300px;
+    margin: 0 0 15px 0 !important;
+}
+.counterTypeSelect{
+    width: 300px;
+    margin: 0 0 15px 0;
+}
+
+.counterButtom{
+    width: 100px;
+}
+.apartmentField{
+    width: 300px;
+}

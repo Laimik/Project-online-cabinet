@@ -47,6 +47,7 @@ class Dashboard extends Component {
             history: history,
             chartData: chartData
         });
+        console.log(this.state);
     }
 
     async applyFilters(selectedAddressIndexes, selectedCounterTypeIndexes, selectedCounterIndexes) {
@@ -93,6 +94,7 @@ class Dashboard extends Component {
                                     <CardContent>
                                         <HistoryTable
                                             history={this.state.history}
+                                            chartData={this.state.chartData}
                                         />
                                     </CardContent>
                                 </Card>

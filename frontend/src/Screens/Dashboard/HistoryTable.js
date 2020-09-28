@@ -20,6 +20,7 @@ class HistoryTable extends Component {
         }
     }
 
+
     handleChangePage = (event, newPage) => {
         this.setState({
             page: newPage
@@ -33,7 +34,8 @@ class HistoryTable extends Component {
         });
     };
 
-    render() {
+    render()
+    {
         return (
             <TableContainer component={Paper}>
                 <Table aria-label="simple table">
@@ -60,8 +62,8 @@ class HistoryTable extends Component {
                                     <TableCell align="right">{entry.counter_type}</TableCell>
                                     <TableCell align="right">{moment(entry.registry_time).format('L')}</TableCell>
                                     <TableCell align="right">{Math.round(entry.value)}</TableCell>
-                                    <TableCell align="right">{entry.rate || 0}</TableCell>
-                                    <TableCell align="right">{Math.round(entry.value) * (entry.rate || 0)}</TableCell>
+                                    <TableCell align="right">{Math.round(entry.rate * 100 || 0)/100}</TableCell>
+                                    <TableCell align="right">{Math.round(entry.summ * 100 || 0)/100}</TableCell>
                                 </TableRow>)
                         })}
                     </TableBody>

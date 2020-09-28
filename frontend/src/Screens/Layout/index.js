@@ -168,7 +168,7 @@ export default function Layout(props) {
                 }}
             >
                 <div className={classes.toolbar}>
-                    <Typography variant="h5" component="a" href={'/'}>ЖКХ онлайн</Typography>
+                    <Typography variant="h5" component="a" className={"mainLink"} href={'/'}>ЖКХ онлайн</Typography>
                     <IconButton onClick={handleDrawerClose}>
                         {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
                     </IconButton>

@@ -172,11 +172,11 @@ class Values extends Component {
                         {this.props.types.map((type, index) => {
                             return(<div key={index}>
                                 <Typography variant="subtitle1" component="p">{type}</Typography>
-                                <Typography variant="caption" component="p">Стоимость: {this.renderRateForType(type)}</Typography>
+                                <Typography variant="caption" component="p">Стоимость: {Math.round(this.renderRateForType(type)*100)/100}</Typography>
                                 {this.renderCountersForType(type)}
                             </div>);
                         })}
-                        <Button variant="contained" color="primary" type={"submit"}>
+                        <Button variant="contained" color="primary" type={"submit"} className={"buttonValue"}>
                             Сохранить показания
                         </Button>
                     </form>
