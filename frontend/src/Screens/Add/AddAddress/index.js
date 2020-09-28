@@ -36,7 +36,9 @@ class AddAddress extends Component {
 
     submit = async () => {
         try {
-            await postAddress(this.state.house.unrestricted_value, this.state.apartment, this.state.house.data.house_fias_id);
+            await postAddress(this.state.house.unrestricted_value,
+                this.state.apartment,
+                this.state.house.data.house_fias_id || this.state.street.data.street_fias_id);
             window.location.href = '/profile';
            } catch (e) {
             this.setState({submitError: true});
