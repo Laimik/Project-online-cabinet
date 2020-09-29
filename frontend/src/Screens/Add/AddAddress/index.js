@@ -8,7 +8,6 @@ import authGuard from "../../../Components/AuthGuard";
 import Container from "@material-ui/core/Container";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Alert from "@material-ui/lab/Alert";
-import {Redirect} from "react-router";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import style from "./style.css"
 
@@ -81,7 +80,7 @@ class AddAddress extends Component {
     render() {
         if (this.state.loading) {
             return <Container>
-                <CircularProgress/>
+                <CircularProgress className={'circleLoading'}/>
             </Container>;
         } else {
             return (

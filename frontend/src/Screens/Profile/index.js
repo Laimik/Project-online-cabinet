@@ -1,5 +1,4 @@
-import React, { Component } from 'react'
-import Avatar from '@material-ui/core/Avatar';
+import React, { Component } from 'react';
 import authGuard from "../../Components/AuthGuard";
 import {getProfile} from "../../Services/profileService";
 import {getAddresses} from "../../Services/addressService";
@@ -24,9 +23,6 @@ import {getCounterTypes} from "../../Services/counterTypeService";
 import Layout from "../Layout";
 import styles from "./style.css";
 import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
-import AddIcon from '@material-ui/icons/Add';
-import {classes} from "istanbul-lib-coverage";
 
 class Profile extends Component {
     constructor(props) {
@@ -118,7 +114,7 @@ class Profile extends Component {
                         }
 
                     } )}
-                    <Button color="primary" size={"small"} href={`/add_counter?address_id=${address.id}`}>Добавить счетчик</Button>
+                    <Button color="primary" size={"small"}  className={'buttonNewCounter'} href={`/add_counter?address_id=${address.id}`}>Добавить счетчик</Button>
                 </TableBody>
             </Table>
         </TableContainer>)
@@ -126,9 +122,11 @@ class Profile extends Component {
 
     render() {
         if (this.state.loading) {
-            return <Container>
-                <CircularProgress/>
-            </Container>;
+            return <Layout >
+                <Container>
+                    <CircularProgress className={'circleLoading'}/>
+                </Container>
+            </Layout>
         } else {
             return (
                 <Layout label={'Личный кабинет'}>
