@@ -143,9 +143,11 @@ class Values extends Component {
 
     render() {
         if (this.state.loading) {
-            return <Container>
-                <CircularProgress/>
-            </Container>;
+            return <Layout>
+            <Container>
+                <CircularProgress className={'circleLoading'}/>
+            </Container>
+            </Layout>
         } else {
             return (
                 <Layout label={this.props.types.join(' / ')}>

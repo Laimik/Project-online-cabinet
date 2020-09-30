@@ -11,4 +11,9 @@ ListItem{
 
 .buttonNew{
     width: 15% !important;
+
+}
+
+.buttonNewCounter{
+    margin: 10px !important;
 }

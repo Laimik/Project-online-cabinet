@@ -1,5 +1,4 @@
 import React, {Component} from "react";
-import authGuard from "../../Components/AuthGuard";
 import {Line} from "react-chartjs-2";
 import moment from "moment";
 

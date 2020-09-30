@@ -8,7 +8,6 @@ import Dashboard from "./Screens/Dashboard"
 import moment from "moment";
 import localization from 'moment/locale/ru';
 import Values from "./Screens/Values";
-import Adding from "./Screens/Add/AddCounder";
 import AddCounter from "./Screens/Add/AddCounder";
 import AddAddress from "./Screens/Add/AddAddress";
 

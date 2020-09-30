@@ -1,22 +1,16 @@
 import React, {Component} from "react";
 import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Layout from "../../Layout";
-import {getAddresses, postAddress} from "../../../Services/addressService";
-import {getCounters, postCounter, sendCounterValues} from "../../../Services/counterService";
+import { postCounter} from "../../../Services/counterService";
 import {getCounterTypes} from "../../../Services/counterTypeService";
-import {getCounterValues} from "../../../Services/counterValueService";
 import authGuard from "../../../Components/AuthGuard";
 import MenuItem from "@material-ui/core/MenuItem";
 import Container from "@material-ui/core/Container";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import {getCurrentRates} from "../../../Services/rateService";
-import Typography from "@material-ui/core/Typography";
 import Alert from "@material-ui/lab/Alert";
-import NativeSelect from "@material-ui/core/NativeSelect";
 import style from "./style.css"
 
 class AddACounter extends Component {
@@ -71,7 +65,7 @@ class AddACounter extends Component {
     render() {
         if (this.state.loading) {
             return <Container>
-                <CircularProgress/>
+                <CircularProgress className={'circleLoading'}/>
             </Container>;
         } else {
             return (
